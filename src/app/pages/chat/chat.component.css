@@ -4,6 +4,13 @@
   background-color: #52acff;
   background-image: linear-gradient(180deg, #52acff 25%, #ffe32c 100%);
 }
+.container-counting {
+  max-width: 1170px;
+  margin: auto;
+}
+.bidding-product {
+  border: 2px solid black;
+}
 
 .chat_header {
   display: flex;
@@ -151,6 +158,9 @@ img {
 .incoming_msg_img {
   display: inline-block;
   width: 6%;
+}
+.bot {
+  color: red !important;
 }
 
 .received_msg {

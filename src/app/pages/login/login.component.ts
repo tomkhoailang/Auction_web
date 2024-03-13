@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit(): void {
+    this.usersService.getIsLoggedIn().subscribe((isLoggedIn: boolean) => {
+      if (isLoggedIn) this.router.navigateByUrl('/welcome');
+    });
     this.RegisterForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       username: [
@@ -68,6 +71,7 @@ export class LoginComponent implements OnInit {
           });
         },
         error: (e) => {
+          console.log(e);
           this.toast.error({
             detail: 'Failed',
             summary: e.error.message,
@@ -91,12 +95,13 @@ export class LoginComponent implements OnInit {
             duration: 5000,
           });
           localStorage.setItem('accessToken', v.token.accessToken.token);
+          this.usersService.setIsLoggedIn(true);
           this.router.navigateByUrl('/welcome');
         },
         error: (e) => {
           this.toast.error({
             detail: 'Failed',
-            summary: e.error.message,
+            summary: e,
             duration: 5000,
           });
           this.spinner.hide();

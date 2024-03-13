@@ -10,7 +10,7 @@ import { ChatComponent } from './pages/chat/chat.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { JoinRoomComponent } from './pages/join-room/join-room.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-LoginComponent;
+
 import {
   HTTP_INTERCEPTORS,
   HttpClientModule,
@@ -21,9 +21,15 @@ import {
 import { NgToastModule } from 'ng-angular-popup';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { customInterceptor } from './services/custom.interceptor';
+import { customInterceptor } from './interceptors/custom.interceptor';
 import { LoginComponent } from './pages/login/login.component';
-import { errorHandlerInterceptor } from './services/error-handler.interceptor';
+import { errorHandlerInterceptor } from './interceptors/error-handler.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NavbarComponent } from './pages/navbar/navbar.component';
+import { CreateComponent } from './pages/product/create/create.component';
+import { ChatRoomComponent } from './pages/chat-room/chat-room.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +37,9 @@ import { errorHandlerInterceptor } from './services/error-handler.interceptor';
     WelcomeComponent,
     JoinRoomComponent,
     LoginComponent,
+    NavbarComponent,
+    CreateComponent,
+    ChatRoomComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,6 +50,7 @@ import { errorHandlerInterceptor } from './services/error-handler.interceptor';
     NgToastModule,
     BrowserAnimationsModule,
     NgxSpinnerModule,
+    MatSlideToggleModule,
   ],
   providers: [
     provideClientHydration(),
@@ -48,6 +58,7 @@ import { errorHandlerInterceptor } from './services/error-handler.interceptor';
       withFetch(),
       withInterceptors([customInterceptor, errorHandlerInterceptor])
     ),
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent],
 })

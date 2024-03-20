@@ -9,6 +9,7 @@ import { UsersService } from '../../services/users.service';
 import { NgToastService } from 'ng-angular-popup';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -27,9 +28,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit(): void {
-    this.usersService.getIsLoggedIn().subscribe((isLoggedIn: boolean) => {
-      if (isLoggedIn) this.router.navigateByUrl('/welcome');
-    });
+    this.usersService.signOut();
     this.RegisterForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       username: [
@@ -74,7 +73,7 @@ export class LoginComponent implements OnInit {
           console.log(e);
           this.toast.error({
             detail: 'Failed',
-            summary: e.error.message,
+            summary: 'Something went wrong',
             duration: 5000,
           });
           this.spinner.hide();
@@ -83,27 +82,52 @@ export class LoginComponent implements OnInit {
           this.spinner.hide();
           setTimeout(() => {
             window.location.reload();
-          }, 2000);
+          }, 1000);
         },
       });
     } else if (this.isLoginMode && this.isLoginValid()) {
       this.usersService.signIn(this.RegisterForm).subscribe({
         next: (v: any) => {
-          this.toast.success({
-            detail: 'Success',
-            summary: 'Login successfully',
-            duration: 5000,
-          });
-          localStorage.setItem('accessToken', v.token.accessToken.token);
-          this.usersService.setIsLoggedIn(true);
-          this.router.navigateByUrl('/welcome');
+          console.log(v);
+          if (v.body.token === null) {
+            this.router.navigateByUrl('/verify-otp');
+          } else {
+            this.toast.success({
+              detail: 'Success',
+              summary: 'Login successfully',
+              duration: 5000,
+            });
+            localStorage.setItem('accessToken', v.body.token.accessToken.token);
+            localStorage.setItem(
+              'accessTokenExpires',
+              v.body.token.accessToken.expirationTokenDate
+            );
+            localStorage.setItem(
+              'refreshToken',
+              v.body.token.refreshToken.token
+            );
+            localStorage.setItem(
+              'refreshTokenExpires',
+              v.body.token.refreshToken.expirationTokenDate
+            );
+            this.usersService.setIsLoggedIn(true);
+            this.router.navigateByUrl('/welcome');
+          }
         },
         error: (e) => {
-          this.toast.error({
-            detail: 'Failed',
-            summary: e,
-            duration: 5000,
-          });
+          if (e.message === 'Incorrect password') {
+            this.toast.error({
+              detail: 'Failed',
+              summary: 'Incorrect password',
+              duration: 5000,
+            });
+          } else {
+            this.toast.error({
+              detail: 'Failed',
+              summary: 'No user with that email',
+              duration: 5000,
+            });
+          }
           this.spinner.hide();
         },
         complete: () => {

@@ -1,0 +1,144 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Account Settings</h2>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              [(ngModel)]="this.email"
+              readonly
+            />
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              [(ngModel)]="this.userName"
+              readonly
+            />
+          </div>
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="two-factor"
+              [checked]="this.twoFactor"
+              (change)="onCheckboxChange($event)"
+            />
+            <label class="form-check-label" for="two-factor"
+              >Enable Two Factor Authentication</label
+            >
+          </div>
+          <div class="text-center">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#changePasswordModal"
+            >
+              Change Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div
+  class="modal fade"
+  id="changePasswordModal"
+  tabindex="-1"
+  aria-labelledby="changePasswordModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">
+          Change Password
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="ChangePasswordForm">
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label"
+              >Current Password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              formControlName="currentPassword"
+              id="currentPassword"
+              maxlength="20"
+              placeholder="Enter current password"
+            />
+            <div
+              class="form-text text-danger"
+              *ngIf="currentPassword.errors?.['required'] && (currentPassword.touched || currentPassword.dirty)"
+            >
+              Current password is required
+            </div>
+            <div
+              class="form-text text-danger"
+              *ngIf="currentPassword.errors?.['maxlength'] && currentPassword.touched  "
+            >
+              Current password must be equal or lower than 20 characters
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="newPassword"
+              id="newPassword"
+              maxlength="20"
+              placeholder="Enter new password"
+            />
+            <div
+              class="form-text text-danger"
+              *ngIf="newPassword.errors?.['required'] && (newPassword.touched || newPassword.dirty)"
+            >
+              New password is required
+            </div>
+            <div
+              class="form-text text-danger"
+              *ngIf="newPassword.errors?.['pattern'] && newPassword.touched "
+            >
+              New password must have at least 1 upper case, 1 lower case, 1
+              special character and 1 number, at least 6 characters
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onSubmit()"
+          [disabled]="!this.ChangePasswordForm.valid"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

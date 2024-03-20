@@ -27,6 +27,7 @@
     "express": "^4.18.2",
     "localstorage-polyfill": "^1.0.1",
     "ng-angular-popup": "^0.5.2",
+    "ngx-cookie-service": "^17.1.0",
     "ngx-spinner": "^16.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

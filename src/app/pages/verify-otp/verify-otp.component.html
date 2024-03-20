@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Enter OTP</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="otpInput" class="form-label"
+              >Please enter the OTP which is sent to your email</label
+            >
+            <br />
+            <label for="otpInput" class="form-label">OTP</label>
+            <input
+              type="text"
+              class="form-control otp-input"
+              id="otpInput"
+              [(ngModel)]="otp"
+              maxlength="6"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary" (click)="loginOtp()">
+            Verify
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

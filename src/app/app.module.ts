@@ -29,6 +29,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NavbarComponent } from './pages/navbar/navbar.component';
 import { CreateComponent } from './pages/product/create/create.component';
 import { ChatRoomComponent } from './pages/chat-room/chat-room.component';
+import { VerifyOtpComponent } from './pages/verify-otp/verify-otp.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import { ChatRoomComponent } from './pages/chat-room/chat-room.component';
     NavbarComponent,
     CreateComponent,
     ChatRoomComponent,
+    VerifyOtpComponent,
+    ForgotPasswordComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

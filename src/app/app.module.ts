@@ -32,6 +32,7 @@ import { ChatRoomComponent } from './pages/chat-room/chat-room.component';
 import { VerifyOtpComponent } from './pages/verify-otp/verify-otp.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
     VerifyOtpComponent,
     ForgotPasswordComponent,
     ProfileComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

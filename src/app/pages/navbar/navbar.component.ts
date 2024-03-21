@@ -13,11 +13,22 @@ export class NavbarComponent {
   role = '';
   constructor(private userService: UsersService, private router: Router) {}
   ngOnInit(): void {
-    const excludedUrls = ['/forgot-password', '/login'];
+    const excludedUrls = [
+      '/forgot-password',
+      '/login',
+      '/reset-password',
+      '/verify-otp',
+    ];
     this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe((nav: any) => {
-        if (!excludedUrls.includes(nav.url)) {
+        const matches = nav.url.match(/\/reset-password/);
+
+        const resetPasswordValue = matches ? matches[0] : null;
+        if (
+          !excludedUrls.includes(nav.url) &&
+          !excludedUrls.includes(resetPasswordValue)
+        ) {
           this.userService.getUserInfo().subscribe({
             next: (v: any) => {
               this.userService.setRole(v.response.role);

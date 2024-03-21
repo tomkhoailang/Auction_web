@@ -90,6 +90,10 @@ export class UsersService {
     let url = 'http://localhost:5274/api/authentication/change-password';
     return this.http.post(url, changePasswordModel);
   }
+  verifyResetPassword(changePasswordModel: any) {
+    let url = `http://localhost:5274/api/authentication/reset-password?token=${changePasswordModel.token}&email=${changePasswordModel.email}`;
+    return this.http.post(url, { NewPassword: changePasswordModel.password });
+  }
   getUserInfo() {
     let url = 'http://localhost:5274/api/user';
     return this.http.get(url);

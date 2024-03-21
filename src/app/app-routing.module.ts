@@ -10,6 +10,7 @@ import { VerifyOtpComponent } from './pages/verify-otp/verify-otp.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { PermissionsService } from './guards/auth-guard.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,6 +26,8 @@ const routes: Routes = [
     canActivate: [PermissionsService],
   },
   { path: 'chat', component: ChatComponent, canActivate: [PermissionsService] },
+  { path: 'reset-password', component: ResetPasswordComponent },
+
   {
     path: 'login',
     component: LoginComponent,

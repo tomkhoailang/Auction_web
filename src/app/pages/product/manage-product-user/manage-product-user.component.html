@@ -2,10 +2,34 @@
   <div class="row">
     <div class="col-md-8">
       <nav class="nav nav-pills nav-justified">
-        <button class="nav-link active" (click)="setActiveTable(1)" [class.active]="activeButtonIndex === 1">WAITING</button>
-        <button class="nav-link" (click)="setActiveTable(2)" [class.active]="activeButtonIndex === 2">REGISTERED</button>
-        <button class="nav-link" (click)="setActiveTable(3)" [class.active]="activeButtonIndex === 3">SOLD</button>
-        <button class="nav-link" (click)="setActiveTable(4)" [class.active]="activeButtonIndex === 4">EXPIRED</button>
+        <button
+          class="nav-link active"
+          (click)="setActiveTable(1)"
+          [class.active]="activeButtonIndex === 1"
+        >
+          WAITING
+        </button>
+        <button
+          class="nav-link"
+          (click)="setActiveTable(2)"
+          [class.active]="activeButtonIndex === 2"
+        >
+          REGISTERED
+        </button>
+        <button
+          class="nav-link"
+          (click)="setActiveTable(3)"
+          [class.active]="activeButtonIndex === 3"
+        >
+          SOLD
+        </button>
+        <button
+          class="nav-link"
+          (click)="setActiveTable(4)"
+          [class.active]="activeButtonIndex === 4"
+        >
+          EXPIRED
+        </button>
       </nav>
       <table class="table" *ngIf="activeTable === 1">
         <thead>
@@ -18,32 +42,42 @@
             <th scope="col">Status</th>
           </tr>
         </thead>
-          <tbody *ngFor="let product of this.pageSlice; let i = index" >
-            <tr>
-              <th scope="row">
-                <div>
-                              <img [src]="
-                              product.images[0]
-                                ? 'productImages/' + product.images[0].image
-                                : 'https://via.placeholder.com/150'
-                            " class="card-img-top" alt="Product Image" />            
-                </div>
-              </th>
-              <th scope="row">{{product.name}}</th>
-              <th scope="row">{{product.description}}</th>
-              <th scope="row">{{product.initialPrice}}</th>
-              <th scope="row">{{product.minimumStep}}</th>
-              <th>
-                <div>
-                  <button id="edi" (click)="SendDataProductToEdit(product.productId, i)">Edit</button>
-                </div>
-                <div>
-                  <button id="del" (click)="DeleteProduct(product.productId, i)">Delete</button>
-                </div>
-              </th>
-            </tr>
-  
-          </tbody>
+        <tbody *ngFor="let product of this.pageSlice; let i = index">
+          <tr>
+            <th scope="row">
+              <div>
+                <img
+                  [src]="
+                    product.images[0]
+                      ? 'productImages/' + product.images[0].image
+                      : 'https://via.placeholder.com/150'
+                  "
+                  class="card-img-top"
+                  alt="Product Image"
+                />
+              </div>
+            </th>
+            <th scope="row">{{ product.name }}</th>
+            <th scope="row">{{ product.description }}</th>
+            <th scope="row">{{ product.initialPrice }}</th>
+            <th scope="row">{{ product.minimumStep }}</th>
+            <th>
+              <div>
+                <button
+                  id="edi"
+                  (click)="SendDataProductToEdit(product.productId, i)"
+                >
+                  Edit
+                </button>
+              </div>
+              <div>
+                <button id="del" (click)="DeleteProduct(product.productId, i)">
+                  Delete
+                </button>
+              </div>
+            </th>
+          </tr>
+        </tbody>
       </table>
 
       <table class="table" *ngIf="activeTable === 2">
@@ -57,27 +91,32 @@
             <th scope="col">Bidding Time</th>
           </tr>
         </thead>
-        
 
         <tbody *ngFor="let product of this.pageSlice; let i = index">
           <tr>
             <th scope="row">
               <div>
-                            <img [src]="
-                            product.images[0]
-                              ? 'productImages/' + product.images[0].image
-                              : 'https://via.placeholder.com/150'
-                          " class="card-img-top" alt="Product Image" />            
+                <img
+                  [src]="
+                    product.images[0]
+                      ? 'productImages/' + product.images[0].image
+                      : 'https://via.placeholder.com/150'
+                  "
+                  class="card-img-top"
+                  alt="Product Image"
+                />
               </div>
             </th>
-            <th scope="row">{{product.name}}</th>
-            <th scope="row">{{product.description}}</th>
-            <th scope="row">{{product.initialPrice}}</th>
-            <th scope="row">{{product.minimumStep}}</th>
-            <th >
+            <th scope="row">{{ product.name }}</th>
+            <th scope="row">{{ product.description }}</th>
+            <th scope="row">{{ product.initialPrice }}</th>
+            <th scope="row">{{ product.minimumStep }}</th>
+            <th>
               <ul class="list-inline mb-0 text-muted">
                 <li class="list-inline-item">
-                  <i class="mdi mdi-map-marker"></i>{{ formatDate(product.chatRoomProducts[0].biddingStartTime)
+                  <i class="mdi mdi-map-marker"></i
+                  >{{
+                    formatDate(product.chatRoomProducts[0].biddingStartTime)
                   }}
                 </li>
                 To
@@ -88,7 +127,6 @@
               </ul>
             </th>
           </tr>
-
         </tbody>
       </table>
 
@@ -108,30 +146,41 @@
           <tr>
             <th scope="row">
               <div>
-                            <img [src]="
-                            product.images[0]
-                              ? 'productImages/' + product.images[0].image
-                              : 'https://via.placeholder.com/150'
-                          " class="card-img-top" alt="Product Image" />            
+                <img
+                  [src]="
+                    product.images[0]
+                      ? 'productImages/' + product.images[0].image
+                      : 'https://via.placeholder.com/150'
+                  "
+                  class="card-img-top"
+                  alt="Product Image"
+                />
               </div>
             </th>
-            <th scope="row">{{product.name}}</th>
-            <th scope="row">{{product.description}}</th>
-            <th scope="row">{{product.initialPrice}}</th>
-            <th scope="row">{{product.minimumStep}}</th>
-            <th >
+            <th scope="row">{{ product.name }}</th>
+            <th scope="row">{{ product.description }}</th>
+            <th scope="row">{{ product.initialPrice }}</th>
+            <th scope="row">{{ product.minimumStep }}</th>
+            <th>
               <div>
-                <p>Amount: {{product.Bidding[product.Biddings.length-1].biddingAmount}}</p>
+                <p>
+                  Amount:
+                  {{
+                    product.Bidding[product.Biddings.length - 1].biddingAmount
+                  }}
+                </p>
               </div>
               <div>
-                <p>User: {{product.Bidding[product.Biddings.length-1].biddingUserId}}</p>
+                <p>
+                  User:
+                  {{
+                    product.Bidding[product.Biddings.length - 1].biddingUserId
+                  }}
+                </p>
               </div>
             </th>
           </tr>
-
         </tbody>
-
-
       </table>
 
       <table class="table" *ngIf="activeTable === 4">
@@ -150,86 +199,148 @@
           <tr>
             <th scope="row">
               <div>
-                            <img [src]="
-                            product.images[0]
-                              ? 'productImages/' + product.images[0].image
-                              : 'https://via.placeholder.com/150'
-                          " class="card-img-top" alt="Product Image" />            
+                <img
+                  [src]="
+                    product.images[0]
+                      ? 'productImages/' + product.images[0].image
+                      : 'https://via.placeholder.com/150'
+                  "
+                  class="card-img-top"
+                  alt="Product Image"
+                />
               </div>
             </th>
-            <th scope="row">{{product.name}}</th>
-            <th scope="row">{{product.description}}</th>
-            <th scope="row">{{product.initialPrice}}</th>
-            <th scope="row">{{product.minimumStep}}</th>
-            <th >
+            <th scope="row">{{ product.name }}</th>
+            <th scope="row">{{ product.description }}</th>
+            <th scope="row">{{ product.initialPrice }}</th>
+            <th scope="row">{{ product.minimumStep }}</th>
+            <th>
               <div>
-                <div>{{formatDate(product.chatRoomProducts[0].biddingEndTime)}}</div>
-                <button id="edi" (click)="ContinueBidding(product.productId)">Continue Bidding</button>
+                <div>
+                  {{ formatDate(product.chatRoomProducts[0].biddingEndTime) }}
+                </div>
+                <button id="edi" (click)="ContinueBidding(product.productId)">
+                  Continue Bidding
+                </button>
               </div>
             </th>
-            <th *ngIf="product.productInStatuses[product.productInStatuses.length - 1].productStatusId != 1">
-              {{product.productInStatuses[product.productInStatuses.length - 1].sta}}
+            <th
+              *ngIf="
+                product.productInStatuses[product.productInStatuses.length - 1]
+                  .productStatusId != 1
+              "
+            >
+              {{
+                product.productInStatuses[product.productInStatuses.length - 1]
+                  .sta
+              }}
             </th>
           </tr>
-
         </tbody>
-
-
       </table>
 
-      <mat-paginator 
-            [length]="this.listWaiting.length" 
-            [pageSize]="2" 
-            [pageSizeOptions]="[1, 2, 5, 10, 15]" 
-            aria-label="Select page" 
-            (page)="onPageChange($event)">
-        </mat-paginator>
-
+      <mat-paginator
+        [length]="this.listWaiting.length"
+        [pageSize]="10"
+        [pageSizeOptions]="[1, 2, 5, 10, 15]"
+        aria-label="Select page"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
     </div>
     <div class="col-md-4">
       <h2>Create Product</h2>
       <form [formGroup]="CreateProductForm">
         <div class="mb-3">
           <label for="productName" class="form-label">Product Name</label>
-          <input type="text" class="form-control" id="productName" formControlName="Name"
-            placeholder="Enter product name" required />
+          <input
+            type="text"
+            class="form-control"
+            id="productName"
+            formControlName="Name"
+            placeholder="Enter product name"
+            required
+          />
         </div>
         <div class="mb-3">
-          <label for="productDescription" class="form-label">Product Description</label>
-          <textarea class="form-control" formControlName="Description" id="productDescription" rows="3"
-            placeholder="Enter product description" required></textarea>
+          <label for="productDescription" class="form-label"
+            >Product Description</label
+          >
+          <textarea
+            class="form-control"
+            formControlName="Description"
+            id="productDescription"
+            rows="3"
+            placeholder="Enter product description"
+            required
+          ></textarea>
         </div>
         <div class="mb-3">
           <label for="initialPrice" class="form-label">Initial Price</label>
-          <input type="number" class="form-control" id="initialPrice" formControlName="InitialPrice"
-            placeholder="Enter initial price" required />
+          <input
+            type="number"
+            class="form-control"
+            id="initialPrice"
+            formControlName="InitialPrice"
+            placeholder="Enter initial price"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="minimumStep" class="form-label">Minimum Step</label>
-          <input type="number" class="form-control" formControlName="MinimumStep" id="MinimumStep"
-            placeholder="Enter minimum step" required />
+          <input
+            type="number"
+            class="form-control"
+            formControlName="MinimumStep"
+            id="MinimumStep"
+            placeholder="Enter minimum step"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="imageUpload" class="form-label">Product Images</label>
-          <input type="file" class="form-control" id="imageUpload" accept="image/*" multiple
-            (change)="onFileSelected($event)" />
+          <input
+            type="file"
+            class="form-control"
+            id="imageUpload"
+            accept="image/*"
+            multiple
+            (change)="onFileSelected($event)"
+          />
         </div>
         <div>
-          <button *ngIf="areSubmit" id="btnsubmit" type="submit" (click)="onSubmit()" class="btn btn-primary"
-            style="margin-bottom: 20px">
+          <button
+            *ngIf="areSubmit"
+            id="btnsubmit"
+            type="submit"
+            (click)="onSubmit()"
+            class="btn btn-primary"
+            style="margin-bottom: 20px"
+          >
             Submit
           </button>
 
-          <button *ngIf="!areSubmit" id="btnedit" type="button" (click)="EditProductInfo()" class="btn btn-primary" style="margin-bottom: 20px; ">
+          <button
+            *ngIf="!areSubmit"
+            id="btnedit"
+            type="button"
+            (click)="EditProductInfo()"
+            class="btn btn-primary"
+            style="margin-bottom: 20px"
+          >
             Edit Confirm
           </button>
 
-          <button id="btncancel" type="button" (click)="onCancel()" class="btn btn-primary"
-            style="margin-bottom: 20px; margin-inline: 20px;">
+          <button
+            id="btncancel"
+            type="button"
+            (click)="onCancel()"
+            class="btn btn-primary"
+            style="margin-bottom: 20px; margin-inline: 20px"
+          >
             Cancel
           </button>
         </div>
-
       </form>
 
       <div class="d-flex flex-wrap">
@@ -237,20 +348,21 @@
           <div *ngFor="let image of uploadedImages; let i = index">
             <div class="item">
               <div class="card">
-                <img class="card-img-top" [src]="image
-                ? image
-                : 'https://via.placeholder.com/150'" alt="Card image cap" />
+                <img
+                  class="card-img-top"
+                  [src]="image ? image : 'https://via.placeholder.com/150'"
+                  alt="Card image cap"
+                />
                 <div class="card-body">
-                  <a (click)="deleteImage(i)" class="btn btn-primary">Xóa ảnh này</a>
+                  <a (click)="deleteImage(i)" class="btn btn-primary"
+                    >Xóa ảnh này</a
+                  >
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   </div>
-
 </div>

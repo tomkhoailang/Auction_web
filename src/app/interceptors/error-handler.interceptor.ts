@@ -7,7 +7,6 @@ export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err) => {
       if (err instanceof HttpErrorResponse) {
-        console.log(err);
         if (err.status === 401) {
           throw new Error('Unauthorized');
         }

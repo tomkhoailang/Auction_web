@@ -11,7 +11,7 @@ export class ChatRoomService {
     return this.http.get(url);
   }
   createChatRoom(startDate: any) {
-    console.log(startDate.startDate)
+    console.log(startDate.startDate);
     let url = 'http://localhost:5274/api/ChatRoom';
     return this.http.post(url, startDate);
   }
@@ -31,12 +31,12 @@ export class ChatRoomService {
     let url = `http://localhost:5274/api/Chatroom/${chatRoomId}`;
     return this.http.get(url);
   }
-  deleteChatRoom(chatRoomId: number){
+  deleteChatRoom(chatRoomId: number) {
     let url = `http://localhost:5274/api/Chatroom/${chatRoomId}`;
     return this.http.delete(url);
   }
   editChatRoom(startDate: any, chatRoomId: number) {
-    let url = `http://localhost:5274/api/Chatroom/${chatRoomId}/edit`;
-    return this.http.post(url, startDate);
+    let url = `http://localhost:5274/api/Chatroom/${chatRoomId}`;
+    return this.http.patch(url, startDate);
   }
 }

@@ -16,9 +16,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-manage-product-user',
   templateUrl: './manage-product-user.component.html',
-  styleUrl: './manage-product-user.component.css'
+  styleUrl: './manage-product-user.component.css',
 })
-
 export class ManageProductUserComponent implements OnInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -47,7 +46,7 @@ export class ManageProductUserComponent implements OnInit {
     private productService: ProductService,
     private http: HttpClient,
     private location: Location
-  ) { }
+  ) {}
   ngOnInit(): void {
     this.CreateProductForm = this.fb.group({
       Name: ['', [Validators.required]],
@@ -57,18 +56,24 @@ export class ManageProductUserComponent implements OnInit {
     });
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
-      console.log(this.userId)
+      console.log(this.userId);
       this.areSubmit = true;
       this.productService.getProductListFromUser().subscribe((data: any) => {
-
         console.log(data);
         if (data) {
           this.ProductList = data.response;
-          console.log(this.ProductList)
-          this.ProductList.forEach(element => {
-            switch (element.productInStatuses[element.productInStatuses.length - 1].productStatusId) {
+          console.log(this.ProductList);
+          this.ProductList.forEach((element) => {
+            switch (
+              element.productInStatuses[element.productInStatuses.length - 1]
+                .productStatusId
+            ) {
               case 1: {
-                console.log(element.productInStatuses[element.productInStatuses.length - 1].productStatusId)
+                console.log(
+                  element.productInStatuses[
+                    element.productInStatuses.length - 1
+                  ].productStatusId
+                );
                 this.listWaiting.push(element);
                 break;
               }
@@ -77,12 +82,18 @@ export class ManageProductUserComponent implements OnInit {
                 break;
               }
               case 2: {
-                console.log(element.chatRoomProducts[element.chatRoomProducts.length - 1].biddingEndTime)
-                var endDate = new Date(element.chatRoomProducts[element.chatRoomProducts.length - 1].biddingEndTime)
+                console.log(
+                  element.chatRoomProducts[element.chatRoomProducts.length - 1]
+                    .biddingEndTime
+                );
+                var endDate = new Date(
+                  element.chatRoomProducts[
+                    element.chatRoomProducts.length - 1
+                  ].biddingEndTime
+                );
                 if (endDate <= this.currentDate) {
                   this.listExpire.push(element);
-                }
-                else {
+                } else {
                   this.listRegister.push(element);
                 }
                 break;
@@ -90,44 +101,38 @@ export class ManageProductUserComponent implements OnInit {
               default: {
                 break;
               }
-
             }
           });
 
-          this.pageSlice = this.listWaiting.slice(0, 2);
+          this.pageSlice = this.listWaiting.slice(0, 10);
           this.ChosenList = this.listWaiting;
+        } else {
+          window.alert('Null data');
         }
-        else {
-          window.alert("Null data")
-        }
-      })
+      });
 
       this.productService.getStatusList().subscribe((data1: any) => {
-
         this.StatusList = data1.response;
-      })
+      });
 
       setInterval(() => {
         this.currentDate = new Date();
       }, 1000);
     }
-
   }
 
   ContinueBidding(productId: number) {
-    this.productService
-      .continueBidding(productId)
-      .subscribe({
-        next: () => { },
-        error: () => { },
-        complete: () => {
-          var answer = window.alert("Success"); this.onCancel();
-          // debugger; 
+    this.productService.continueBidding(productId).subscribe({
+      next: () => {},
+      error: () => {},
+      complete: () => {
+        var answer = window.alert('Success');
+        this.onCancel();
+        // debugger;
 
-          window.location.reload();
-        }
-      });
-
+        window.location.reload();
+      },
+    });
   }
 
   SendDataProductToEdit(productId: number, index: number): void {
@@ -143,42 +148,43 @@ export class ManageProductUserComponent implements OnInit {
     this.uploadedImages = [];
     this.files = [];
     for (let i = 0; i < this.ProductList.at(index).images.length; i++) {
-
-
-      const imageUrl = ('productImages/' + this.ProductList.at(index)?.images[i].image) as string; // Adjust the path to your image file
+      const imageUrl = ('productImages/' +
+        this.ProductList.at(index)?.images[i].image) as string; // Adjust the path to your image file
       fetch(imageUrl)
-        .then(response => {
-          console.log('this is res', response)
-          return response.blob()
+        .then((response) => {
+          console.log('this is res', response);
+          return response.blob();
         })
-        .then(blob => {
-          console.log(this.ProductList.at(index)?.images[i].image)
-          const file = new File([blob], this.ProductList.at(index)?.images[i].image as string); // Create a File object
+        .then((blob) => {
+          console.log(this.ProductList.at(index)?.images[i].image);
+          const file = new File(
+            [blob],
+            this.ProductList.at(index)?.images[i].image as string
+          ); // Create a File object
 
           this.files.push(file);
           this.displayImage(file);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(imageUrl);
           console.error('Error fetching image:', error);
         });
     }
     console.log(this.files);
-
-
   }
   EditProductInfo(): void {
     this.productService
       .editProduct(this.CreateProductForm, this.files, this.productIdEdit)
       .subscribe({
-        next: () => { },
-        error: () => { },
+        next: () => {},
+        error: () => {},
         complete: () => {
-          var answer = window.alert("Success"); this.onCancel();
-          // debugger; 
+          var answer = window.alert('Success');
+          this.onCancel();
+          // debugger;
 
           window.location.reload();
-        }
+        },
       });
   }
   onCancel(): void {
@@ -189,7 +195,7 @@ export class ManageProductUserComponent implements OnInit {
       MinimumStep: ['', [Validators.required]],
     });
     this.uploadedImages = [];
-    console.log(this.uploadedImages)
+    console.log(this.uploadedImages);
     this.files = [];
     this.areSubmit = true;
     this.productIdEdit = null;
@@ -198,7 +204,11 @@ export class ManageProductUserComponent implements OnInit {
   getCurrentDateTime(): string {
     const now = new Date();
     // Format the current date and time to match the format required by datetime-local input
-    const formattedDateTime = `${now.getFullYear()}-${this.padZero(now.getMonth() + 1)}-${this.padZero(now.getDate())}T${this.padZero(now.getHours())}:${this.padZero(now.getMinutes())}`;
+    const formattedDateTime = `${now.getFullYear()}-${this.padZero(
+      now.getMonth() + 1
+    )}-${this.padZero(now.getDate())}T${this.padZero(
+      now.getHours()
+    )}:${this.padZero(now.getMinutes())}`;
     return formattedDateTime;
   }
 
@@ -207,15 +217,12 @@ export class ManageProductUserComponent implements OnInit {
   }
 
   DeleteProduct(productId: number, index: number): void {
-    var answer = window.confirm("Save data?");
+    var answer = window.confirm('Save data?');
     if (answer) {
       this.ProductList.splice(index, 1);
-      this.productService.deleteProduct(productId).subscribe((a: any) => {
-      })
+      this.productService.deleteProduct(productId).subscribe((a: any) => {});
+    } else {
     }
-    else {
-    }
-
   }
 
   formatDate(dateString: string): any {
@@ -246,7 +253,6 @@ export class ManageProductUserComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
 
     if (inputElement.files && inputElement.files.length > 0) {
-
       const files = inputElement.files as FileList;
       for (let i = 0; i < files.length; i++) {
         this.files.push(files[i]);
@@ -259,7 +265,7 @@ export class ManageProductUserComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = () => {
       this.uploadedImages.push(reader.result as string);
-      console.log(file)
+      console.log(file);
     };
     reader.readAsDataURL(file);
   }
@@ -322,7 +328,6 @@ export class ManageProductUserComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-
     const startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
     if (endIndex > this.ChosenList.length) {
@@ -334,11 +339,13 @@ export class ManageProductUserComponent implements OnInit {
     this.productService
       .createProduct(this.CreateProductForm, this.files)
       .subscribe({
-        next: () => { },
-        error: () => { },
-        complete: () => { var answer = window.alert("Success"); this.onCancel(); window.location.reload() }
+        next: () => {},
+        error: () => {},
+        complete: () => {
+          var answer = window.alert('Success');
+          this.onCancel();
+          window.location.reload();
+        },
       });
   }
-
-
 }

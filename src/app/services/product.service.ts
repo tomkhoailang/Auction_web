@@ -20,7 +20,7 @@ export class ProductService {
       data.append('Files[]', file, file.name);
     }
     // forget to add images
-    let url = 'http://localhost:5274/api/Product/create';
+    let url = 'http://localhost:5274/api/Product';
     return this.http.post(url, data);
   }
 
@@ -37,8 +37,8 @@ export class ProductService {
       data.append('Files[]', file, file.name);
     }
     // forget to add images
-    let url = `http://localhost:5274/api/Product/${productId}/edit`;
-    return this.http.post(url, data);
+    let url = `http://localhost:5274/api/Product/${productId}`;
+    return this.http.patch(url, data);
   }
 
   getProductListFromChat(chatRoomId: number) {
@@ -48,30 +48,29 @@ export class ProductService {
   getProductListFromUser() {
     let url = `http://localhost:5274/api/user/products`;
     return this.http.get(url);
-    
   }
-  getStatusList(){
+  getStatusList() {
     let url = `http://localhost:5274/api/Product/statuses`;
     return this.http.get(url);
   }
-  deleteProduct(productId: number){
-    let url = `http://localhost:5274/api/Product/${productId}/delete`;
+  deleteProduct(productId: number) {
+    let url = `http://localhost:5274/api/Product/${productId}`;
     return this.http.delete(url);
   }
 
-  getProduct(productId: number){
+  getProduct(productId: number) {
     let url = `http://localhost:5274/api/Product/${productId}`;
     return this.http.get(url);
   }
 
-  getProductsWithStatus(statusId: number){
+  getProductsWithStatus(statusId: number) {
     let url = `http://localhost:5274/api/Product/status/${statusId}`;
     return this.http.get(url);
   }
 
   continueBidding(productId: number) {
     // forget to add images
-    let url = `http://localhost:5274/api/Product/new/${productId}`;
+    let url = `http://localhost:5274/api/Product/${productId}/productStatuses`;
     return this.http.post(url, productId);
   }
 }

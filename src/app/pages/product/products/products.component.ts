@@ -9,9 +9,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
+  styleUrl: './products.component.css',
 })
-
 export class ProductsComponent {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -40,7 +39,7 @@ export class ProductsComponent {
     private router: Router,
     private productService: ProductService,
     private http: HttpClient
-  ) { }
+  ) {}
   ngOnInit(): void {
     this.CreateProductForm = this.fb.group({
       Name: ['', []],
@@ -49,25 +48,28 @@ export class ProductsComponent {
       MinimumStep: ['', []],
       MaximumStep: ['', []],
       StartDate: ['', []],
-      EndDate: ['', []]
+      EndDate: ['', []],
     });
     if (typeof document != 'undefined') {
       this.currentTime = new Date(Date.now());
 
       this.productService.getProductsWithStatus(2).subscribe((data: any) => {
-        console.log(data);
+        console.log('this is data', data);
         this.ProductList = data.response;
         this.ProductSave = data.response;
         this.selectedProduct = this.ProductList[0];
-        this.selectedImage = 'productImages/' + this.selectedProduct.images[0].image;
-        this.pageSlice = this.ProductList.slice(0,2);
-        console.log(this.ProductList)
-      })
+        this.selectedImage =
+          'productImages/' + this.selectedProduct.images[0]?.image;
+        this.pageSlice = this.ProductList.slice(0, 10);
+        console.log(this.ProductList);
+      });
     }
-
   }
 
-  compareTime(startTime: any){
+  isYourProduct(sellerId: string): boolean {
+    return sellerId === this.userId;
+  }
+  compareTime(startTime: any) {
     if (startTime && startTime < this.currentTime) {
       return true; // biddingStartTime is sooner than currentTime
     } else {
@@ -81,83 +83,91 @@ export class ProductsComponent {
 
   setSelectedProduct(product: any) {
     this.selectedProduct = product;
-    console.log(this.selectedProduct)
+    this.selectedImage = 'productImages/' + product.images[0].image;
+    console.log(this.selectedProduct);
   }
 
   joinChatRoom(chatRoomId: number) {
     console.log(chatRoomId);
     this.chatRoomService.joinChatRoom(chatRoomId).subscribe({
-      next: () => { },
-      error: () => { },
-      complete: () => { var answer = window.alert("Success"); window.location.reload() }
-    })
+      next: () => {},
+      error: () => {},
+      complete: () => {
+        var answer = window.alert('Success');
+        window.location.reload();
+      },
+    });
   }
 
   onSortByItemClick(index: number): void {
-    if(this.sortBy != index){
+    if (this.sortBy != index) {
       this.sortBy = index;
       this.sortListItem();
     }
-
   }
 
   onOrderByItemClick(index: number): void {
-    if(this.orderBy != index){
-      this.orderBy = index; 
+    if (this.orderBy != index) {
+      this.orderBy = index;
       this.sortListItem();
     }
-
   }
 
-  sortListItem(){
-    switch(this.sortBy){
-      case 0:{
+  sortListItem() {
+    switch (this.sortBy) {
+      case 0: {
         console.log(this.sortBy);
         this.ProductList.sort((a, b) => a.name.localeCompare(b.name));
-        console.log("name");
+        console.log('name');
         break;
       }
-      case 1:{
+      case 1: {
         console.log(this.sortBy);
         this.ProductList.sort((a, b) => a.initialPrice - b.initialPrice);
-        console.log("price");
+        console.log('price');
         break;
       }
-      case 2:{
+      case 2: {
         console.log(this.sortBy);
         this.ProductList.sort((a, b) => a.minimumStep - b.minimumStep);
-        console.log("step");
+        console.log('step');
         break;
       }
-      case 3:{
+      case 3: {
         console.log(this.sortBy);
         this.ProductList.sort((a, b) => {
           var biddingStartTimeA = null;
           var biddingStartTimeB = null;
-          if (a.chatRoomProducts && a.chatRoomProducts.length > 0 &&
-              b.chatRoomProducts && b.chatRoomProducts.length > 0) {
+          if (
+            a.chatRoomProducts &&
+            a.chatRoomProducts.length > 0 &&
+            b.chatRoomProducts &&
+            b.chatRoomProducts.length > 0
+          ) {
+            biddingStartTimeA = new Date(
+              a.chatRoomProducts[0]?.biddingStartTime
+            );
+            biddingStartTimeB = new Date(
+              b.chatRoomProducts[0]?.biddingStartTime
+            );
 
-            biddingStartTimeA = new Date(a.chatRoomProducts[0]?.biddingStartTime);
-            biddingStartTimeB = new Date(b.chatRoomProducts[0]?.biddingStartTime);
-        
             if (biddingStartTimeA && biddingStartTimeB) {
-
               return biddingStartTimeA.getTime() - biddingStartTimeB.getTime();
             }
           }
-          
-          return (biddingStartTimeA ? -1 : (biddingStartTimeB ? 1 : 0));
+
+          return biddingStartTimeA ? -1 : biddingStartTimeB ? 1 : 0;
         });
-        console.log("start");
+        console.log('start');
         console.log(this.ProductList);
         break;
       }
-      default:{
+      default: {
         break;
       }
     }
 
-    if(this.orderBy == 1){
+    if (this.orderBy == 1) {
       this.ProductList = this.ProductList.reverse();
       console.log(this.ProductList);
     }
@@ -166,11 +176,10 @@ export class ProductsComponent {
   }
 
   resetPaginator(): void {
-    
     this.paginator.length = this.ProductList.length; // Set the length of the paginator
     this.paginator.pageIndex = 0; // Reset the page index to 0
     this.paginator.pageSize = 2;
-    this.pageSlice = this.ProductList.slice(0,2);
+    this.pageSlice = this.ProductList.slice(0, 2);
   }
 
   formatDate(dateString: string): any {
@@ -205,7 +214,7 @@ export class ProductsComponent {
     console.log(event);
     const startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
-    if(endIndex > this.ProductList.length){
+    if (endIndex > this.ProductList.length) {
       endIndex = this.ProductList.length;
     }
     this.pageSlice = this.ProductList.slice(startIndex, endIndex);
@@ -218,19 +227,20 @@ export class ProductsComponent {
       MinimumStep: ['', []],
       MaximumStep: ['', []],
       StartDate: ['', []],
-      EndDate: ['', []]
+      EndDate: ['', []],
     });
     this.productService.getProductsWithStatus(2).subscribe((data: any) => {
       console.log(data);
       this.ProductList = data.response;
       this.selectedProduct = this.ProductList[0];
-      this.selectedImage = 'productImages/' + this.selectedProduct.images[0].image;
-      this.pageSlice = this.ProductList.slice(0,2);
-    })
+      this.selectedImage =
+        'productImages/' + this.selectedProduct.images[0].image;
+      this.pageSlice = this.ProductList.slice(0, 2);
+    });
   }
 
   onSubmit(): void {
-    console.log(this.CreateProductForm.value)
+    console.log(this.CreateProductForm.value);
 
     // if(this.CreateProductForm.value.StartDate && this.CreateProductForm.value.EndDate){
     //   if(this.CreateProductForm.value.StartDate >= this.CreateProductForm.value.EndDate){
@@ -241,29 +251,49 @@ export class ProductsComponent {
     this.ProductList = this.ProductSave;
 
     var result = this.CreateProductForm.value;
-    var searchName = result.Name?result.Name:'';
-    var searchMaxPrice = result.MaximumPrice?result.MaximumPrice:Number.MAX_VALUE;
-    var searchMinPrice = result.MinimumPrice?result.MinimumPrice:Number.MIN_VALUE;
-    var searchMaxStep = result.MaximumStep?result.MaximumStep:Number.MAX_VALUE;
-    var searchMinStep = result.MinimumStep?result.MinimumStep:Number.MIN_VALUE;
-    var searchStart = new Date(result.StartDate?result.StartDate:0);
-    var searchEnd = new Date(result.EndDate?result.EndDate:'9999-12-31T23:59:59.999');
+    var searchName = result.Name ? result.Name : '';
+    var searchMaxPrice = result.MaximumPrice
+      ? result.MaximumPrice
+      : Number.MAX_VALUE;
+    var searchMinPrice = result.MinimumPrice
+      ? result.MinimumPrice
+      : Number.MIN_VALUE;
+    var searchMaxStep = result.MaximumStep
+      ? result.MaximumStep
+      : Number.MAX_VALUE;
+    var searchMinStep = result.MinimumStep
+      ? result.MinimumStep
+      : Number.MIN_VALUE;
+    var searchStart = new Date(result.StartDate ? result.StartDate : 0);
+    var searchEnd = new Date(
+      result.EndDate ? result.EndDate : '9999-12-31T23:59:59.999'
+    );
 
-    console.log(searchName, searchMaxPrice, searchMinPrice, searchMaxStep, searchMinStep,searchStart, searchEnd);
+    console.log(
+      searchName,
+      searchMaxPrice,
+      searchMinPrice,
+      searchMaxStep,
+      searchMinStep,
+      searchStart,
+      searchEnd
+    );
 
     var listPd: any[] = [];
-    this.ProductList.forEach(element => {
-      console.log(element)
+    this.ProductList.forEach((element) => {
+      console.log(element);
       var start = new Date(element.chatRoomProducts[0].biddingStartTime);
       var end = new Date(element.chatRoomProducts[0].biddingEndTime);
-      if(element.name.includes(searchName)
-      && element.initialPrice >= searchMinPrice
-      && element.initialPrice <= searchMaxPrice
-      && element.minimumStep >= searchMinStep
-      && element.minimumStep <= searchMaxStep
-      && start >= searchStart
-      && end <= searchEnd)
-      listPd.push(element);
+      if (
+        element.name.includes(searchName) &&
+        element.initialPrice >= searchMinPrice &&
+        element.initialPrice <= searchMaxPrice &&
+        element.minimumStep >= searchMinStep &&
+        element.minimumStep <= searchMaxStep &&
+        start >= searchStart &&
+        end <= searchEnd
+      )
+        listPd.push(element);
     });
 
     this.ProductList = listPd;
@@ -271,4 +301,3 @@ export class ProductsComponent {
     this.sortListItem();
   }
 }
-

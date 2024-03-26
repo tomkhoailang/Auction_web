@@ -5,25 +5,42 @@
     </div>
     <div class="row">
       <div class="col-lg-3">
-        <h2 style="margin-top: 12px;">Search</h2>
+        <h2 style="margin-top: 12px">Search</h2>
         <form [formGroup]="CreateProductForm">
           <div class="mb-3">
             <label for="productName" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="productName" formControlName="Name"
-              placeholder="Enter product name" required />
+            <input
+              type="text"
+              class="form-control"
+              id="productName"
+              formControlName="Name"
+              placeholder="Enter product name"
+              required
+            />
           </div>
           <div class="form-row">
             <label for="productName" class="form-label">Initial Price</label>
           </div>
           <div class="mb-3 form-row">
-
             <div class="col">
-              <input type="number" class="form-control" id="initialPriceFrom" formControlName="MinimumPrice"
-                placeholder="Min Price" min="0"/>
+              <input
+                type="number"
+                class="form-control"
+                id="initialPriceFrom"
+                formControlName="MinimumPrice"
+                placeholder="Min Price"
+                min="0"
+              />
             </div>
             <div class="col">
-              <input type="number" class="form-control" id="initialPriceTo" formControlName="MaximumPrice"
-                placeholder="Max Price" min="0"/>
+              <input
+                type="number"
+                class="form-control"
+                id="initialPriceTo"
+                formControlName="MaximumPrice"
+                placeholder="Max Price"
+                min="0"
+              />
             </div>
           </div>
           <div>
@@ -31,67 +48,120 @@
           </div>
           <div class="mb-3 form-row">
             <div class="col">
-              <input type="number" class="form-control" formControlName="MinimumStep" id="MinimumStep"
-                placeholder="Min Step" min="0"/>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="MinimumStep"
+                id="MinimumStep"
+                placeholder="Min Step"
+                min="0"
+              />
             </div>
             <div class="col">
-              <input type="number" class="form-control" formControlName="MaximumStep" id="MaximumStep"
-                placeholder="Max Step" min="0"/>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="MaximumStep"
+                id="MaximumStep"
+                placeholder="Max Step"
+                min="0"
+              />
             </div>
           </div>
           <div class="mb-3 form-row">
             <label for="startDate" class="form-label">Start Date</label>
-            <input type="datetime-local" class="form-control" id="StartDate" formControlName="StartDate">
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="StartDate"
+              formControlName="StartDate"
+            />
           </div>
 
           <div class="mb-3 form-row">
             <label for="endDate" class="form-label">End Date</label>
-            <input type="datetime-local" class="form-control" id="endDate" formControlName="EndDate">
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="endDate"
+              formControlName="EndDate"
+            />
           </div>
           <div>
-            <button id="btnsubmit" type="submit" (click)="onSubmit()" class="btn btn-primary"
-              style="margin-bottom: 20px">
+            <button
+              id="btnsubmit"
+              type="submit"
+              (click)="onSubmit()"
+              class="btn btn-primary"
+              style="margin-bottom: 20px"
+            >
               Submit
             </button>
 
-            <button id="btncancel" type="button" (click)="onCancel()" class="btn btn-primary"
-              style="margin-bottom: 20px; margin-inline: 20px;">
+            <button
+              id="btncancel"
+              type="button"
+              (click)="onCancel()"
+              class="btn btn-primary"
+              style="margin-bottom: 20px; margin-inline: 20px"
+            >
               Reset
             </button>
           </div>
-
         </form>
       </div>
       <div class="col-lg-9">
-        <div class="dropdown-container" style="margin-block: 12px;">
+        <div class="dropdown-container" style="margin-block: 12px">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton1"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               Sort By
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" ariaLabel="Sort By">
+            <ul
+              class="dropdown-menu"
+              aria-labelledby="dropdownMenuButton1"
+              ariaLabel="Sort By"
+            >
               <li *ngFor="let item of sortList; let i = index">
-                <a class="dropdown-item" (click)="onSortByItemClick(i)">{{ item }}</a>
+                <a class="dropdown-item" (click)="onSortByItemClick(i)">{{
+                  item
+                }}</a>
               </li>
             </ul>
           </div>
-              <label 
-              class="border border-2 rounded text-center d-flex justify-content-center align-items-center" 
-              style="width: 100px;"
-              >{{sortList[sortBy]}}</label>
+          <label
+            class="border border-2 rounded text-center d-flex justify-content-center align-items-center"
+            style="width: 100px"
+            >{{ sortList[sortBy] }}</label
+          >
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton1"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               Order By
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
               <li *ngFor="let item of orderList; let i = index">
-                <a class="dropdown-item" (click)="onOrderByItemClick(i)">{{ item }}</a>
+                <a class="dropdown-item" (click)="onOrderByItemClick(i)">{{
+                  item
+                }}</a>
               </li>
             </ul>
           </div>
-          <label 
-              class="border border-2 rounded text-center d-flex justify-content-center align-items-center" 
-              style="width: 100px;"
-              >{{orderList[orderBy]}}</label>
+          <label
+            class="border border-2 rounded text-center d-flex justify-content-center align-items-center"
+            style="width: 100px"
+            >{{ orderList[orderBy] }}</label
+          >
         </div>
         <div *ngFor="let product of this.pageSlice">
           <div class="candidate-list" style="cursor: pointer">
@@ -101,44 +171,78 @@
                   <div class="col-auto">
                     <div class="candidate-list-images">
                       <a>
-                        <img class="avatar-md img-thumbnail" *ngIf="product?.images && product.images.length > 0"
-                          [src]="'productImages/' + product.images[0].image" alt />
+                        <img
+                          class="avatar-md img-thumbnail"
+                          *ngIf="product?.images && product.images.length > 0"
+                          [src]="'productImages/' + product.images[0].image"
+                          alt
+                        />
                       </a>
                     </div>
                   </div>
                   <div class="col-lg-5">
                     <div class="candidate-list-content mt-3 mt-lg-0">
                       <h5 class="fs-19 mb-0">
-                        <a class="primary-link">Name: {{product.name}}</a>
+                        <a class="primary-link">Name: {{ product.name }}</a>
                       </h5>
                       <p class="fs-19 mb-0">
-                        <a class="primary-link">Initial Price: {{product.initialPrice}}</a>
+                        <a class="primary-link"
+                          >Initial Price: {{ product.initialPrice }}</a
+                        >
                       </p>
                       <p class="fs-19 mb-0">
-                        <a class="primary-link">Minimum Step:{{product.minimumStep}}</a>
+                        <a class="primary-link"
+                          >Minimum Step:{{ product.minimumStep }}</a
+                        >
                       </p>
                       <br />
                       <ul class="list-inline mb-0 text-muted">
                         <li class="list-inline-item">
-                          <i class="mdi mdi-map-marker"></i>{{
-                          formatDate(product.chatRoomProducts[0].biddingStartTime) }}
+                          <i class="mdi mdi-map-marker"></i
+                          >{{
+                            formatDate(
+                              product.chatRoomProducts[0].biddingStartTime
+                            )
+                          }}
                         </li>
                         To
                         <li class="list-inline-item">
                           <i class="mdi mdi-wallet"></i>
-                          {{ formatDate(product.chatRoomProducts[0].biddingEndTime) }}
+                          {{
+                            formatDate(
+                              product.chatRoomProducts[0].biddingEndTime
+                            )
+                          }}
                         </li>
                       </ul>
                     </div>
                   </div>
                   <div class="col-lg-auto">
-                    <div class="candidate-list-content mt-3 mt-lg-0 margin-inline-end: 100px;">
-                      <div class="position-absolute top-50 end-0 translate-middle-y" style="margin-inline-end: 50px;">
-                        <button class="btn btn-success" style="margin-inline-end: 10px;"
-                          (click)="setSelectedProduct(product)" data-bs-toggle="modal"
-                          data-bs-target="#exampleModalToggle">Details</button>
-                        <button class="btn btn-success"
-                          (click)="joinChatRoom(product.chatRoomProducts[0].chatRoomId)">Join Bidding</button>
+                    <div
+                      class="candidate-list-content mt-3 mt-lg-0 margin-inline-end: 100px;"
+                    >
+                      <div
+                        class="position-absolute top-50 end-0 translate-middle-y"
+                        style="margin-inline-end: 50px"
+                      >
+                        <button
+                          class="btn btn-success"
+                          style="margin-inline-end: 10px"
+                          (click)="setSelectedProduct(product)"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModalToggle"
+                        >
+                          Details
+                        </button>
+                        <button
+                          *ngIf="isYourProduct(product?.sellerId)"
+                          class="btn btn-success"
+                          (click)="
+                            joinChatRoom(product.chatRoomProducts[0].chatRoomId)
+                          "
+                        >
+                          Join Bidding
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -148,63 +252,101 @@
           </div>
         </div>
 
-        <mat-paginator 
-            [length]="this.ProductList.length" 
-            [pageSize]="2" 
-            [pageSizeOptions]="[1, 2, 5, 10, 15]" 
-            aria-label="Select page" 
-            (page)="onPageChange($event)">
+        <mat-paginator
+          [length]="this.ProductList.length"
+          [pageSize]="10"
+          [pageSizeOptions]="[1, 2, 5, 10, 15]"
+          aria-label="Select page"
+          (page)="onPageChange($event)"
+        >
         </mat-paginator>
 
-        <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-          tabindex="-1">
+        <div
+          class="modal fade"
+          id="exampleModalToggle"
+          aria-hidden="true"
+          aria-labelledby="exampleModalToggleLabel"
+          tabindex="-1"
+        >
           <div class="modal-dialog modal-dialog-centered modal-lg">
-
             <div class="modal-content">
-
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Product Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalToggleLabel">
+                  Product Details
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body">
-
                 <div class="row">
                   <div class="col-md-6">
                     <div class="images p-3">
-                      <div class="text-center p-4 "> <img id="main-image" [src]="this.selectedImage"
-                          class="img-thumbnail object-fit-sm-contain border rounded" [style.max-height.px]="200" />
+                      <div class="text-center p-4">
+                        <img
+                          id="main-image"
+                          [src]="this.selectedImage"
+                          class="img-thumbnail object-fit-sm-contain border rounded"
+                          [style.max-height.px]="200"
+                        />
                       </div>
 
                       <div class="image-container thumbnail text-center">
-                        <div *ngFor="let image of selectedProduct?.images; let i = index">
-                          <img (click)="changeImage(image.image)" [src]="'productImages/' + image.image" width="70"
-                            height="70">
+                        <div
+                          *ngFor="
+                            let image of selectedProduct?.images;
+                            let i = index
+                          "
+                        >
+                          <img
+                            (click)="changeImage(image.image)"
+                            [src]="'productImages/' + image?.image"
+                            width="70"
+                            height="70"
+                          />
                         </div>
                       </div>
-
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="product p-4">
                       <div class="mt-4 mb-3">
-                        <h3 class="text-uppercase text-muted brand">{{selectedProduct?.name}}</h3>
+                        <h3 class="text-uppercase text-muted brand">
+                          {{ selectedProduct?.name }}
+                        </h3>
                         <div class="price d-flex flex-row align-items-center">
-                          <span>${{selectedProduct?.initialPrice}}</span>
+                          <span>${{ selectedProduct?.initialPrice }}</span>
                         </div>
-                        <div class="price d-flex flex-row align-items-center"> <span>Minimum Step:
-                            {{selectedProduct?.minimumStep}}</span>
+                        <div class="price d-flex flex-row align-items-center">
+                          <span
+                            >Minimum Step:
+                            {{ selectedProduct?.minimumStep }}</span
+                          >
                         </div>
                       </div>
-                      <p class="about">{{selectedProduct?.description}}</p>
+                      <p class="about">{{ selectedProduct?.description }}</p>
                       <ul class="list-inline mb-0 text-muted">
                         <li class="list-inline-item">
-                          <i class="mdi mdi-map-marker"></i>Start Bidding: {{
-                          formatDate(selectedProduct?.chatRoomProducts[0].biddingStartTime) }}
+                          <i class="mdi mdi-map-marker"></i>Start Bidding:
+                          {{
+                            formatDate(
+                              selectedProduct?.chatRoomProducts[0]
+                                .biddingStartTime
+                            )
+                          }}
                         </li>
 
                         <li class="list-inline-item">
                           <i class="mdi mdi-wallet"></i>End Bidding:
-                          {{ formatDate(selectedProduct?.chatRoomProducts[0].biddingEndTime) }}
+                          {{
+                            formatDate(
+                              selectedProduct?.chatRoomProducts[0]
+                                .biddingEndTime
+                            )
+                          }}
                         </li>
                       </ul>
                     </div>

@@ -1,0 +1,55 @@
+<section class="section">
+    <div class="container">
+      <div class="justify-content-center row">
+        <div class="col-lg-12"></div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div *ngFor="let chatRoom of this.ChatRoomList">
+            <div
+              class="candidate-list"
+              (click)="toDetailsChatRoom(chatRoom.chatRoomId)"
+              style="cursor: pointer"
+            >
+              <div class="candidate-list-box card mt-4">
+                <div class="p-4 card-body">
+                  <div class="align-items-center row">
+                    <div class="col-auto">
+                      <div class="candidate-list-images">
+                        <a
+                          ><img
+                            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                            alt
+                            class="avatar-md img-thumbnail rounded-circle"
+                        /></a>
+                      </div>
+                    </div>
+                    <div class="col-lg-5">
+                      <div class="candidate-list-content mt-3 mt-lg-0">
+                        <h5 class="fs-19 mb-0">
+                          <a class="primary-link">{{chatRoom.chatRoomId}}</a>
+                        </h5>
+                        <br />
+                        <ul class="list-inline mb-0 text-muted">
+                          <li class="list-inline-item">
+                            <i class="mdi mdi-map-marker"></i
+                            >{{ formatDate(chatRoom.startDate) }}
+                          </li>
+                          To
+                          <li class="list-inline-item">
+                            <i class="mdi mdi-wallet"></i>
+                            {{ formatDate(chatRoom.endDate) }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

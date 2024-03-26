@@ -44,14 +44,44 @@
           </ul>
         </li>
       </ul>
-      <form *ngIf="this.role === 'User'" class="d-flex">
+      <form *ngIf="this.role === 'Admin'" class="d-flex">
         <button
-          (click)="redirectToCreateProduct()"
+          (click)="redirectToCreateChatRoom()"
           class="btn btn-outline-dark"
           type="submit"
         >
           <i class="bi-cart-fill me-1"> </i>
-          Register product
+          Create Chatroom
+        </button>
+      </form>
+      <form *ngIf="this.role === 'Admin'" class="d-flex">
+        <button
+          (click)="redirectToAllChatRoom()"
+          class="btn btn-outline-dark"
+          type="submit"
+        >
+          <i class="bi-cart-fill me-1"> </i>
+          List Chatroom
+        </button>
+      </form>
+      <form *ngIf="this.role === 'User'" class="d-flex">
+        <button
+          (click)="redirectToProducts()"
+          class="btn btn-outline-dark"
+          type="submit"
+        >
+          <i class="bi-cart-fill me-1"> </i>
+          List Product
+        </button>
+      </form>
+      <form *ngIf="this.role === 'User'" class="d-flex">
+        <button
+          (click)="redirectToUserProducts()"
+          class="btn btn-outline-dark"
+          type="submit"
+        >
+          <i class="bi-cart-fill me-1"> </i>
+          Your Product
         </button>
       </form>
       <form class="d-flex">

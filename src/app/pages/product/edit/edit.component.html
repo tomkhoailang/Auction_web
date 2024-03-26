@@ -1,0 +1,88 @@
+<div class="container mt-5">
+    <h2>Create Product</h2>
+    <form [formGroup]="CreateProductForm">
+      <div class="mb-3">
+        <label for="productName" class="form-label">Product Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="productName"
+          formControlName="Name"
+          placeholder="Enter product name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="productDescription" class="form-label"
+          >Product Description</label
+        >
+        <textarea
+          class="form-control"
+          formControlName="Description"
+          id="productDescription"
+          rows="3"
+          placeholder="Enter product description"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="initialPrice" class="form-label">Initial Price</label>
+        <input
+          type="number"
+          class="form-control"
+          id="initialPrice"
+          formControlName="InitialPrice"
+          placeholder="Enter initial price"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="minimumStep" class="form-label">Minimum Step</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="MinimumStep"
+          id="MinimumStep"
+          placeholder="Enter minimum step"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="imageUpload" class="form-label">Product Images</label>
+        <input
+          type="file"
+          class="form-control"
+          id="imageUpload"
+          accept="image/*"
+          multiple
+          (change)="onFileSelected($event)"
+        />
+      </div>
+      <button
+        type="submit"
+        (click)="onSubmit()"
+        class="btn btn-primary"
+        style="margin-bottom: 20px"
+      >
+        Submit
+      </button>
+    </form>
+  
+    <div class="d-flex flex-wrap">
+      <div class="items">
+        <div *ngFor="let image of uploadedImages; let i = index">
+          <div class="item">
+            <div class="card">
+              <img class="card-img-top" [src]="image" alt="Card image cap" />
+              <div class="card-body">
+                <a (click)="deleteImage(i)" class="btn btn-primary"
+                  >Xóa ảnh này</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

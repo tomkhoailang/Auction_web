@@ -1,0 +1,51 @@
+img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+th {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#edi {
+    background-color: orange;
+}
+
+#del {
+    background-color: red;
+}
+
+#edi:hover {
+    background-color: rgb(255, 145, 0);
+}
+
+#del:hover {
+    background-color: rgb(185, 0, 0);
+}
+
+.items {
+    column-count: 3;
+    column-gap: 20px;
+}
+
+.item {
+    break-inside: avoid;
+    margin-bottom: 10px;
+}
+
+.nav-link.active {
+    color: #ff0000;
+    /* Change to the desired active color */
+    background-color: #ffffff;
+    /* Change to the desired active text color */
+}
+
+.nav.link:hover {
+    background-color: #ff0000;
+    /* Change to the desired active color */
+    color: #ffffff;
+    /* Change to the desired active text color */   
+}

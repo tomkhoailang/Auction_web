@@ -64,8 +64,20 @@ export class NavbarComponent {
     this.userService.signOut();
     this.router.navigateByUrl('/login');
   }
-  redirectToCreateProduct(): void {
-    this.router.navigateByUrl('/product/create');
+  redirectToCreateChatRoom(): void {
+    console.log('create room')
+    this.router.navigateByUrl('/manage-chatroom-admin/create-chat-room');
+  }
+  redirectToProducts(): void {
+    console.log('product list')
+    this.router.navigateByUrl('/product/products');
+  }
+  redirectToAllChatRoom(): void {
+    console.log('all room')
+    this.router.navigateByUrl('/manage-chatroom-admin/chatrooms');
+  }
+  redirectToUserProducts(): void {
+    this.router.navigateByUrl('/product/manage-user');
   }
   redirectToHomepage(): void {
     this.router.navigateByUrl('/welcome');

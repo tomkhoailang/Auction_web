@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Num</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Initial Price</th>
+                        <th scope="col">Minimum Step</th>
+                        <th scope="col">Select</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let product of this.ProductList; let i = index">
+                    <tr>
+                        <th scope="row">{{i+1}}</th>
+                        <th scope="row">
+                            <div>
+                                <img [src]="
+                              product.images[0]
+                                ? 'productImages/' + product.images[0].image
+                                : 'https://via.placeholder.com/150'
+                            " class="avatar-md img-thumbnail " alt="Product Image" />
+                            </div>
+                        </th>
+                        <th scope="row">{{product.name}}</th>
+                        <th scope="row">{{product.description}}</th>
+                        <th scope="row">{{product.initialPrice}}</th>
+                        <th scope="row">{{product.minimumStep}}</th>
+                        <th>
+                            <div>
+                                <input type="checkbox" id="sel{{i}}" [checked]="checkedStates[i]"  [value]="product.productId"
+                                    (change)="TestCheckBox($event, i)">
+                            </div>
+
+                        </th>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <h2>Create Chatroom</h2>
+            <form [formGroup]="CreateChatRoomForm">
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="datetime-local" class="form-control" id="StartDate" formControlName="StartDate"
+                    (input)="handleInput($event)" [attr.min]="getCurrentDateTime()" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input type="datetime-local" class="form-control" id="endDate"
+                        required disabled>
+                </div>
+                <div>
+                    <table class="table table-hover table-bordered" style="width: 100%;">
+                        <tbody *ngFor="let product of this.productToAddRoom; let i = index">                            
+                            <tr>
+                                <td scope="row" style="text-align: left;">{{product.name}}</td>
+                            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <button *ngIf="areSubmit" id="btnsubmit" type="submit" (click)="onSubmit()" class="btn btn-primary"
+                        style="margin-bottom: 20px">
+                        Submit
+                    </button>
+
+                    <button id="btncancel" type="button" (click)="onCancel()" class="btn btn-primary"
+                        style="margin-bottom: 20px; margin-inline: 20px;">
+                        Reset
+                    </button>
+                </div>                
+            </form>
+
+        </div>
+    </div>
+
+</div>

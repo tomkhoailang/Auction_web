@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +24,8 @@ export class ProfileComponent implements OnInit {
     private userService: UsersService,
     private toast: NgToastService,
     private fb: FormBuilder,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     const storedUserName = sessionStorage.getItem('user');
@@ -92,6 +94,10 @@ export class ProfileComponent implements OnInit {
           this.spinner.hide();
         },
       });
+  }
+  signOut(): void {
+    this.userService.signOut();
+    this.router.navigateByUrl('/login');
   }
   onCheckboxChange(event: any) {
     this.userService.changeTwoFactor().subscribe({

@@ -65,15 +65,15 @@ export class NavbarComponent {
     this.router.navigateByUrl('/login');
   }
   redirectToCreateChatRoom(): void {
-    console.log('create room')
+    console.log('create room');
     this.router.navigateByUrl('/manage-chatroom-admin/create-chat-room');
   }
   redirectToProducts(): void {
-    console.log('product list')
+    console.log('product list');
     this.router.navigateByUrl('/product/products');
   }
   redirectToAllChatRoom(): void {
-    console.log('all room')
+    console.log('all room');
     this.router.navigateByUrl('/manage-chatroom-admin/chatrooms');
   }
   redirectToUserProducts(): void {

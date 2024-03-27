@@ -7,7 +7,7 @@
       class="navbar-brand"
       (click)="redirectToHomepage()"
       style="cursor: pointer"
-      >Trang chủ</a
+      >Logo</a
     >
     <button
       class="navbar-toggler"
@@ -21,73 +21,75 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+      <ul
+        *ngIf="this.role === 'User'"
+        class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4"
+      >
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#!">Home</a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-        <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle"
-            id="navbarDropdown"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            >Shop</a
+            class="nav-link active"
+            aria-current="page"
+            (click)="redirectToHomepage()"
+            style="cursor: pointer"
+            >Homepage</a
           >
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#!">All Products</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-            <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            (click)="redirectToProducts()"
+            style="cursor: pointer"
+            >Find bidding</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            (click)="redirectToUserProducts()"
+            style="cursor: pointer"
+            >Your product</a
+          >
         </li>
       </ul>
-      <form *ngIf="this.role === 'Admin'" class="d-flex">
-        <button
-          (click)="redirectToCreateChatRoom()"
-          class="btn btn-outline-dark"
-          type="submit"
-        >
-          <i class="bi-cart-fill me-1"> </i>
-          Create Chatroom
-        </button>
-      </form>
-      <form *ngIf="this.role === 'Admin'" class="d-flex">
-        <button
-          (click)="redirectToAllChatRoom()"
-          class="btn btn-outline-dark"
-          type="submit"
-        >
-          <i class="bi-cart-fill me-1"> </i>
-          List Chatroom
-        </button>
-      </form>
-      <form *ngIf="this.role === 'User'" class="d-flex">
-        <button
-          (click)="redirectToProducts()"
-          class="btn btn-outline-dark"
-          type="submit"
-        >
-          <i class="bi-cart-fill me-1"> </i>
-          List Product
-        </button>
-      </form>
-      <form *ngIf="this.role === 'User'" class="d-flex">
-        <button
-          (click)="redirectToUserProducts()"
-          class="btn btn-outline-dark"
-          type="submit"
-        >
-          <i class="bi-cart-fill me-1"> </i>
-          Your Product
-        </button>
-      </form>
-      <form class="d-flex">
+      <ul
+        *ngIf="this.role === 'Admin'"
+        class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4"
+      >
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            (click)="redirectToHomepage()"
+            style="cursor: pointer"
+            >Homepage</a
+          >
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            (click)="redirectToCreateChatRoom()"
+            style="cursor: pointer"
+            >Create Chatroom</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            (click)="redirectToAllChatRoom()"
+            style="cursor: pointer"
+            >List Chatroom</a
+          >
+        </li>
+      </ul>
+
+      <form class="d-flex" *ngIf="this.role === 'User'">
         <button
           (click)="redirectToChatRoomPage()"
-          class="btn btn-outline-dark"
+          class="btn btn-outline-dark btn-margin"
           type="submit"
         >
           <i class="bi-cart-fill me-1"></i>
@@ -97,19 +99,19 @@
       <form class="d-flex">
         <button
           (click)="redirectToProfilePage()"
-          class="btn btn-outline-dark"
+          class="btn btn-outline-dark btn-margin"
           type="submit"
         >
           <i class="bi-cart-fill me-1"></i>
           Profile
         </button>
       </form>
-      <form class="d-flex">
+      <!-- <form class="d-flex">
         <button (click)="signOut()" class="btn btn-outline-dark" type="submit">
           <i class="bi-cart-fill me-1"></i>
           Sign out
         </button>
-      </form>
+      </form> -->
     </div>
   </div>
 </nav>

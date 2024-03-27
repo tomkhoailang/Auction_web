@@ -79,6 +79,7 @@ export class UsersService {
   signOut(): void {
     if (typeof window !== 'undefined' && window.document) {
       localStorage.clear();
+      sessionStorage.clear();
     }
     this.setIsLoggedIn(false);
   }

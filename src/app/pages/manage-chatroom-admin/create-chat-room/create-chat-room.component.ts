@@ -29,6 +29,7 @@ export class CreateChatRoomComponent implements OnInit {
   StatusList: any[] = [];
   userId: any;
   enableSubmit: any;
+  imgObject: any[] = [];
   productIdEdit: any;
   CreateChatRoomForm!: FormGroup;
   checkedStates: boolean[] = [];
@@ -57,7 +58,13 @@ export class CreateChatRoomComponent implements OnInit {
         console.log(data)
 
         this.ProductList = data.response;
+        this.ProductList.forEach(element => {
 
+          element.images.forEach((image: any) => {
+            this.loadImage(image.image, element.productId)
+          });
+        });
+        console.log("test", this.imgObject)
         this.ProductList.forEach(() => {
           this.checkedStates.push(false);
         });
@@ -70,6 +77,36 @@ export class CreateChatRoomComponent implements OnInit {
       })
     }
 
+  }
+
+  loadImage(imgName: string, productId: number) {
+    this.productService.getImage(imgName).subscribe(
+      (data: Blob) => {
+        // debugger
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
+          if (existingProductIndex !== -1) {
+            // Product already exists, append image data
+            this.imgObject[existingProductIndex].images.push(imageData);
+          } else {
+            // Product doesn't exist, create new object
+            this.imgObject.push({ productId: productId, images: [imageData] });
+          }
+        };
+        reader.readAsDataURL(data);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      }
+    );
+
+  }
+
+  getImage(productId: number) {
+    const product = this.imgObject.find(element => element.productId === productId);
+    return product ? product.images : [];
   }
 
   onCancel(): void {

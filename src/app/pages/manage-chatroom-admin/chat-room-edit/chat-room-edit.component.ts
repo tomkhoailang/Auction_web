@@ -22,6 +22,7 @@ export class ChatRoomEditComponent implements OnInit {
   CreateChatRoomForm!: FormGroup;
   checkedStates: boolean[] = [];
   uploadedImages: string[] = [];
+  imgObject: any[] = [];
   isInputDisabled: boolean = true;
   startDate: any;
   productToAddRoom: any[] = [];
@@ -72,6 +73,13 @@ export class ChatRoomEditComponent implements OnInit {
       console.log(data)
 
       this.productToAddRoom = data.response;
+      this.productToAddRoom.forEach(element => {
+
+        element.images.forEach((image: any) => {
+          this.loadImage(image.image, element.productId)
+        });
+      });
+      console.log("test", this.imgObject)
       this.productToAddRoom.forEach((element) => {
         this.checkedStates.push(true);
         this.ProductList.push(element)
@@ -83,7 +91,13 @@ export class ChatRoomEditComponent implements OnInit {
       console.log(data)
 
       this.ProductWaitingList = data.response;
+      this.ProductWaitingList.forEach(element => {
 
+        element.images.forEach((image: any) => {
+          this.loadImage(image.image, element.productId)
+        });
+      });
+      console.log("test", this.imgObject)
       this.ProductWaitingList.forEach((element) => {
         this.checkedStates.push(false);
         this.ProductList.push(element);
@@ -107,6 +121,36 @@ export class ChatRoomEditComponent implements OnInit {
   }
   onCancel(): void {
     this.ResetForm();
+  }
+
+  loadImage(imgName: string, productId: number) {
+    this.productService.getImage(imgName).subscribe(
+      (data: Blob) => {
+        // debugger
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
+          if (existingProductIndex !== -1) {
+            // Product already exists, append image data
+            this.imgObject[existingProductIndex].images.push(imageData);
+          } else {
+            // Product doesn't exist, create new object
+            this.imgObject.push({ productId: productId, images: [imageData] });
+          }
+        };
+        reader.readAsDataURL(data);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      }
+    );
+
+  }
+
+  getImage(productId: number) {
+    const product = this.imgObject.find(element => element.productId === productId);
+    return product ? product.images : [];
   }
 
   getCurrentDateTime(): string {

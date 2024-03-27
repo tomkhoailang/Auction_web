@@ -171,12 +171,17 @@
                   <div class="col-auto">
                     <div class="candidate-list-images">
                       <a>
-                        <img
+                        <!-- <img
                           class="avatar-md img-thumbnail"
                           *ngIf="product?.images && product.images.length > 0"
                           [src]="'productImages/' + product.images[0].image"
                           alt
-                        />
+                        /> -->
+                        <img
+                        [src]="getImage(product.productId)[0]"
+                        class="avatar-md img-thumbnail"
+                        alt="Product Image"
+                      />
                       </a>
                     </div>
                   </div>
@@ -201,7 +206,7 @@
                           <i class="mdi mdi-map-marker"></i
                           >{{
                             formatDate(
-                              product.chatRoomProducts[0].biddingStartTime
+                              product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingStartTime
                             )
                           }}
                         </li>
@@ -210,7 +215,7 @@
                           <i class="mdi mdi-wallet"></i>
                           {{
                             formatDate(
-                              product.chatRoomProducts[0].biddingEndTime
+                              product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime
                             )
                           }}
                         </li>
@@ -235,10 +240,10 @@
                           Details
                         </button>
                         <button
-                          *ngIf="isYourProduct(product?.sellerId)"
+                          *ngIf="isYourProduct(product?.sellerId)  || isExpired(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime)"
                           class="btn btn-success"
                           (click)="
-                            joinChatRoom(product.chatRoomProducts[0].chatRoomId)
+                            joinChatRoom(product.chatRoomProducts[product.chatRoomProducts.length - 1].chatRoomId)
                           "
                         >
                           Join Bidding
@@ -297,16 +302,17 @@
                       <div class="image-container thumbnail text-center">
                         <div
                           *ngFor="
-                            let image of selectedProduct?.images;
+                            let image of this.getImage(this.selectedProduct?.productId);
                             let i = index
                           "
                         >
-                          <img
-                            (click)="changeImage(image.image)"
-                            [src]="'productImages/' + image?.image"
-                            width="70"
+                        <img
+                          (click)="changeImage(image)"
+                          [src]="image"
+                          width="70"
                             height="70"
-                          />
+                          alt="Product Image"
+                        />
                         </div>
                       </div>
                     </div>
@@ -333,7 +339,7 @@
                           <i class="mdi mdi-map-marker"></i>Start Bidding:
                           {{
                             formatDate(
-                              selectedProduct?.chatRoomProducts[0]
+                              selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1]
                                 .biddingStartTime
                             )
                           }}
@@ -343,7 +349,7 @@
                           <i class="mdi mdi-wallet"></i>End Bidding:
                           {{
                             formatDate(
-                              selectedProduct?.chatRoomProducts[0]
+                              selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1]
                                 .biddingEndTime
                             )
                           }}

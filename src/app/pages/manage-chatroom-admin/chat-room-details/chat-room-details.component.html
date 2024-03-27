@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div style="margin-top: 10px;">
+        <div style="margin-top: 10px;" *ngIf="isBidding(ChatRoom)">
           <button type="button" (click)="EditThisChatRoom(this.ChatRoomId)" class="btn btn-warning"
             style="margin-inline-end: 10px;">Edit</button>
           <button type="button" (click)="DeleteThisChatRoom()" class="btn btn-danger">Delete</button>
@@ -51,8 +51,14 @@
                   <div class="col-auto">
                     <div class="candidate-list-images">
                       <a>
-                        <img class="avatar-md img-thumbnail" *ngIf="product?.images && product.images.length > 0"
-                          [src]="'productImages/' + product.images[0].image" alt />
+                        <!-- <img class="avatar-md img-thumbnail" *ngIf="product?.images && product.images.length > 0"
+                          [src]="'productImages/' + product.images[0].image" alt /> -->
+                          <img
+                          class="avatar-md img-thumbnail"
+                          [src]="getImage(product.productId)[0]"
+                          
+                          alt="Product Image"
+                        />
                       </a>
                     </div>
                   </div>
@@ -114,9 +120,23 @@
                       </div>
 
                       <div class="image-container thumbnail text-center">
-                        <div *ngFor="let image of selectedProduct.images; let i = index">
+                        <!-- <div *ngFor="let image of selectedProduct.images; let i = index">
                           <img (click)="changeImage(image.image)" [src]="'productImages/' + image.image" width="70"
                             height="70">
+                        </div> -->
+                        <div
+                          *ngFor="
+                            let image of this.getImage(this.selectedProduct?.productId);
+                            let i = index
+                          "
+                        >
+                          <img
+                          (click)="changeImage(image)"
+                          [src]="image"
+                          width="70"
+                            height="70"
+                          alt="Product Image"
+                        />
                         </div>
                       </div>
 
@@ -137,12 +157,12 @@
                       <ul class="list-inline mb-0 text-muted">
                         <li class="list-inline-item">
                           <i class="mdi mdi-map-marker"></i>Start Bidding: {{
-                          formatDate(selectedProduct?.chatRoomProducts[0].biddingStartTime) }}
+                          formatDate(selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1].biddingStartTime) }}
                         </li>
 
                         <li class="list-inline-item">
                           <i class="mdi mdi-wallet"></i>End Bidding:
-                          {{ formatDate(selectedProduct?.chatRoomProducts[0].biddingEndTime) }}
+                          {{ formatDate(selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1].biddingEndTime) }}
                         </li>
                       </ul>
                     </div>

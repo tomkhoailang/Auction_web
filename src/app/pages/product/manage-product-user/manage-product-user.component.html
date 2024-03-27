@@ -39,46 +39,36 @@
             <th scope="col">Description</th>
             <th scope="col">Initial Price</th>
             <th scope="col">Minimum Step</th>
-            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody *ngFor="let product of this.pageSlice; let i = index">
           <tr>
-            <th scope="row">
-              <div>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">
+              <div >
                 <img
-                  [src]="
-                    product.images[0]
-                      ? 'productImages/' + product.images[0].image
-                      : 'https://via.placeholder.com/150'
-                  "
+                  [src]="getImage(product.productId)[0]"
                   class="card-img-top"
                   alt="Product Image"
                 />
               </div>
-            </th>
-            <th scope="row">{{ product.name }}</th>
-            <th scope="row">{{ product.description }}</th>
-            <th scope="row">{{ product.initialPrice }}</th>
-            <th scope="row">{{ product.minimumStep }}</th>
-            <th>
+            </td>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">{{ product.name }}</td>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">{{ product.description }}</td>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">{{ product.initialPrice }}</td>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">{{ product.minimumStep }}</td>
+            <td scope="row" [ngClass]="{ 'highlight': selectedRowIndex === i }">
               <div>
-                <button
-                  id="edi"
-                  (click)="SendDataProductToEdit(product.productId, i)"
-                >
-                  Edit
-                </button>
+                <button id="edi" (click)="SendDataProductToEdit(product.productId, i)">Edit</button>
               </div>
               <div>
-                <button id="del" (click)="DeleteProduct(product.productId, i)">
-                  Delete
-                </button>
+                <button id="del" (click)="DeleteProduct(product.productId, i)">Delete</button>
               </div>
-            </th>
+            </td>
           </tr>
         </tbody>
       </table>
+      
 
       <table class="table" *ngIf="activeTable === 2">
         <thead>
@@ -97,14 +87,10 @@
             <th scope="row">
               <div>
                 <img
-                  [src]="
-                    product.images[0]
-                      ? 'productImages/' + product.images[0].image
-                      : 'https://via.placeholder.com/150'
-                  "
-                  class="card-img-top"
-                  alt="Product Image"
-                />
+                [src]="getImage(product.productId)[0]"
+                class="card-img-top"
+                alt="Product Image"
+              />
               </div>
             </th>
             <th scope="row">{{ product.name }}</th>
@@ -147,14 +133,10 @@
             <th scope="row">
               <div>
                 <img
-                  [src]="
-                    product.images[0]
-                      ? 'productImages/' + product.images[0].image
-                      : 'https://via.placeholder.com/150'
-                  "
-                  class="card-img-top"
-                  alt="Product Image"
-                />
+                [src]="getImage(product.productId)[0]"
+                class="card-img-top"
+                alt="Product Image"
+              />
               </div>
             </th>
             <th scope="row">{{ product.name }}</th>
@@ -166,7 +148,7 @@
                 <p>
                   Amount:
                   {{
-                    product.Bidding[product.Biddings.length - 1].biddingAmount
+                    product.biddings[product.biddings.length - 1]?.biddingAmount
                   }}
                 </p>
               </div>
@@ -174,7 +156,7 @@
                 <p>
                   User:
                   {{
-                    product.Bidding[product.Biddings.length - 1].biddingUserId
+                    product.biddings[product.biddings.length - 1]?.biddingUserId
                   }}
                 </p>
               </div>
@@ -199,7 +181,7 @@
           <tr>
             <th scope="row">
               <div>
-                <img
+                <!-- <img
                   [src]="
                     product.images[0]
                       ? 'productImages/' + product.images[0].image
@@ -207,7 +189,12 @@
                   "
                   class="card-img-top"
                   alt="Product Image"
-                />
+                /> -->
+                <img
+                [src]="getImage(product.productId)[0]"
+                class="card-img-top"
+                alt="Product Image"
+              />
               </div>
             </th>
             <th scope="row">{{ product.name }}</th>
@@ -249,7 +236,7 @@
       </mat-paginator>
     </div>
     <div class="col-md-4">
-      <h2>Create Product</h2>
+      <h2>Product's Information</h2>
       <form [formGroup]="CreateProductForm">
         <div class="mb-3">
           <label for="productName" class="form-label">Product Name</label>
@@ -345,12 +332,13 @@
 
       <div class="d-flex flex-wrap">
         <div class="items">
-          <div *ngFor="let image of uploadedImages; let i = index">
+          <div *ngFor="let image of this.uploadedImages; let i = index">
             <div class="item">
               <div class="card">
                 <img
+                [src]="image"
                   class="card-img-top"
-                  [src]="image ? image : 'https://via.placeholder.com/150'"
+                  
                   alt="Card image cap"
                 />
                 <div class="card-body">
@@ -366,3 +354,4 @@
     </div>
   </div>
 </div>
+

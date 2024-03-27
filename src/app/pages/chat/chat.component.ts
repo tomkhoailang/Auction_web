@@ -31,8 +31,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
   loggedInUserName: any;
   room: any;
   userId: any;
+  imgObject: any[] = [];
   minBidding: any = 0;
   sendBiddingForm!: FormGroup;
+  selectedProduct: any;
+  selectedImage: any;
 
   @ViewChild('testElement') private testElement!: ElementRef;
   @ViewChild('nextProductTime') private nextProductTime!: ElementRef;
@@ -63,6 +66,13 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
         .getProductListFromChat(this.room)
         .subscribe((data: any) => {
           this.productInChatService.productList = data.response;
+          this.productInChatService.productList.forEach((element:any) => {
+
+            element.images.forEach((image: any) => {
+              this.loadImage(image.image, element.productId)
+            });
+          });
+          console.log("test", this.imgObject)
           this.productInChatService.setCurrentBiddingProduct(this.room);
           let subscription = interval(1000).subscribe(() => {
             this.nextProductTime.nativeElement.innerHTML =
@@ -101,6 +111,68 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
     this.sendBiddingForm = this.fb.group({
       biddingValue: ['', [Validators.required]],
     });
+  }
+  loadImage(imgName: string, productId: number) {
+    this.productService.getImage(imgName).subscribe(
+      (data: Blob) => {
+        // debugger
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
+          if (existingProductIndex !== -1) {
+            // Product already exists, append image data
+            this.imgObject[existingProductIndex].images.push(imageData);
+          } else {
+            // Product doesn't exist, create new object
+            this.imgObject.push({ productId: productId, images: [imageData] });
+          }
+        };
+        reader.readAsDataURL(data);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      }
+    );
+
+  }
+
+  getImage(productId: number) {
+    const product = this.imgObject.find(element => element.productId === productId);
+    return product ? product.images : [];
+  }
+
+  changeImage(image: any) {
+    this.selectedImage = image;
+  }
+  formatDate(dateString: string): any {
+    const date = new Date(dateString);
+    const now = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+
+    if (
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    ) {
+      return 'Today ' + date.toLocaleTimeString('en-US', options);
+    } else {
+      return date.toLocaleTimeString('en-Us', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+  }
+  
+  setSelectedProduct(product: any) {
+    this.selectedProduct = product;
+    this.selectedImage = this.getImage(product.productId)[0];
+    console.log(this.selectedProduct);
   }
   ngAfterViewInit(): void {
     this.productInChatService.isSet$.subscribe((isSet: boolean) => {

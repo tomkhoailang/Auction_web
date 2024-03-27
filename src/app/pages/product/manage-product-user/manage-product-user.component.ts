@@ -12,6 +12,8 @@ import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { fileURLToPath } from 'url';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-manage-product-user',
@@ -37,16 +39,20 @@ export class ManageProductUserComponent implements OnInit {
   listRegister: any[] = [];
   listExpire: any[] = [];
   listSold: any[] = [];
+  listImages: any[] = [];
+  imgObject: any[] = [];
   activeButtonIndex: number = 1;
   activeTable: number = 1;
+  selectedRowIndex: number = -1;
   productToAddRoom: any[] = [];
   constructor(
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private productService: ProductService,
     private http: HttpClient,
-    private location: Location
-  ) {}
+    private location: Location,
+    private sanitizer: DomSanitizer
+  ) { }
   ngOnInit(): void {
     this.CreateProductForm = this.fb.group({
       Name: ['', [Validators.required]],
@@ -60,13 +66,22 @@ export class ManageProductUserComponent implements OnInit {
       this.areSubmit = true;
       this.productService.getProductListFromUser().subscribe((data: any) => {
         console.log(data);
+
         if (data) {
           this.ProductList = data.response;
           console.log(this.ProductList);
+          this.ProductList.forEach(element => {
+
+            element.images.forEach((image: any) => {
+              this.loadImage(image.image, element.productId)
+            });
+          });
+          console.log("test", this.imgObject)
+
           this.ProductList.forEach((element) => {
             switch (
-              element.productInStatuses[element.productInStatuses.length - 1]
-                .productStatusId
+            element.productInStatuses[element.productInStatuses.length - 1]
+              .productStatusId
             ) {
               case 1: {
                 console.log(
@@ -75,10 +90,6 @@ export class ManageProductUserComponent implements OnInit {
                   ].productStatusId
                 );
                 this.listWaiting.push(element);
-                break;
-              }
-              case 4: {
-                this.listSold.push(element);
                 break;
               }
               case 2: {
@@ -92,7 +103,12 @@ export class ManageProductUserComponent implements OnInit {
                   ].biddingEndTime
                 );
                 if (endDate <= this.currentDate) {
-                  this.listExpire.push(element);
+                  if (element.biddings && element.biddings.length > 0) {
+                    this.listSold.push(element);
+                  }
+                  else {
+                    this.listExpire.push(element);
+                  }
                 } else {
                   this.listRegister.push(element);
                 }
@@ -121,10 +137,40 @@ export class ManageProductUserComponent implements OnInit {
     }
   }
 
+  loadImage(imgName: string, productId: number) {
+    this.productService.getImage(imgName).subscribe(
+      (data: Blob) => {
+        // debugger
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
+          if (existingProductIndex !== -1) {
+            // Product already exists, append image data
+            this.imgObject[existingProductIndex].images.push(imageData);
+          } else {
+            // Product doesn't exist, create new object
+            this.imgObject.push({ productId: productId, images: [imageData] });
+          }
+        };
+        reader.readAsDataURL(data);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      }
+    );
+
+  }
+
+  getImage(productId: number) {
+    const product = this.imgObject.find(element => element.productId === productId);
+    return product ? product.images : [];
+  }
+
   ContinueBidding(productId: number) {
     this.productService.continueBidding(productId).subscribe({
-      next: () => {},
-      error: () => {},
+      next: () => { },
+      error: () => { },
       complete: () => {
         var answer = window.alert('Success');
         this.onCancel();
@@ -138,6 +184,7 @@ export class ManageProductUserComponent implements OnInit {
   SendDataProductToEdit(productId: number, index: number): void {
     this.productIdEdit = productId;
     this.areSubmit = false;
+    this.selectedRowIndex = index;
     this.CreateProductForm.patchValue({
       Name: this.ProductList.at(index)?.name?.toString(),
       Description: this.ProductList.at(index)?.description?.toString(),
@@ -147,37 +194,55 @@ export class ManageProductUserComponent implements OnInit {
 
     this.uploadedImages = [];
     this.files = [];
-    for (let i = 0; i < this.ProductList.at(index).images.length; i++) {
-      const imageUrl = ('productImages/' +
-        this.ProductList.at(index)?.images[i].image) as string; // Adjust the path to your image file
-      fetch(imageUrl)
-        .then((response) => {
-          console.log('this is res', response);
-          return response.blob();
-        })
-        .then((blob) => {
-          console.log(this.ProductList.at(index)?.images[i].image);
-          const file = new File(
-            [blob],
-            this.ProductList.at(index)?.images[i].image as string
-          ); // Create a File object
+    const images = this.getImage(productId);
+    images.forEach((image: any) => {
+      this.uploadedImages.push(image);
+      this.files.push(image);
+    });
+    console.log("upload images ", this.uploadedImages)
+    console.log("upload files ", this.files)
 
-          this.files.push(file);
-          this.displayImage(file);
-        })
-        .catch((error) => {
-          console.log(imageUrl);
-          console.error('Error fetching image:', error);
-        });
-    }
-    console.log(this.files);
+    // for (let i = 0; i < this.ProductList.at(index).images.length; i++) {
+    //   const imageUrl = ('productImages/' +
+    //     this.ProductList.at(index)?.images[i].image) as string; // Adjust the path to your image file
+    //   fetch(imageUrl)
+    //     .then((response) => {
+    //       console.log('this is res', response);
+    //       return response.blob();
+    //     })
+    //     .then((blob) => {
+    //       console.log(this.ProductList.at(index)?.images[i].image);
+    //       const file = new File(
+    //         [blob],
+    //         this.ProductList.at(index)?.images[i].image as string
+    //       ); // Create a File object
+
+    //       this.files.push(file);
+    //       this.displayImage(file);
+    //     })
+    //     .catch((error) => {
+    //       console.log(imageUrl);
+    //       console.error('Error fetching image:', error);
+    //     });
+    // }
+
   }
   EditProductInfo(): void {
+    this.files.forEach((element: any, index: number) => {
+      if(this.isBase64(element)){
+        const file = this.base64ToBlob(element,"image/jpeg");
+        if(file){
+          this.files[index] = file;
+        }
+        console.log("element: ", this.files[index])
+      }
+    });
+    console.log("after convert ", this.files)
     this.productService
       .editProduct(this.CreateProductForm, this.files, this.productIdEdit)
       .subscribe({
-        next: () => {},
-        error: () => {},
+        next: () => { },
+        error: () => { },
         complete: () => {
           var answer = window.alert('Success');
           this.onCancel();
@@ -220,7 +285,10 @@ export class ManageProductUserComponent implements OnInit {
     var answer = window.confirm('Save data?');
     if (answer) {
       this.ProductList.splice(index, 1);
-      this.productService.deleteProduct(productId).subscribe((a: any) => {});
+      this.productService.deleteProduct(productId).subscribe((a: any) => { });
+      if (index === this.selectedRowIndex) {
+        this.selectedRowIndex = -1;
+      }
     } else {
     }
   }
@@ -259,13 +327,13 @@ export class ManageProductUserComponent implements OnInit {
         this.displayImage(files[i]);
       }
     }
-    console.log(this.files);
+    console.log('After add file',this.files);
   }
   displayImage(file: File): void {
     const reader = new FileReader();
     reader.onload = () => {
       this.uploadedImages.push(reader.result as string);
-      console.log(file);
+      // console.log(file);
     };
     reader.readAsDataURL(file);
   }
@@ -288,6 +356,8 @@ export class ManageProductUserComponent implements OnInit {
       });
       inputElement.files = fileList.files;
     }
+
+    console.log('after delete', this.files, this.uploadedImages)
   }
 
   setActiveTable(tableNumber: number) {
@@ -295,25 +365,25 @@ export class ManageProductUserComponent implements OnInit {
     this.activeButtonIndex = tableNumber;
     switch (tableNumber) {
       case 1: {
-        this.pageSlice = this.listWaiting.slice(0, 2);
+        this.pageSlice = this.listWaiting.slice(0, 10);
         this.paginator.length = this.listWaiting.length;
         this.ChosenList = this.listWaiting;
         break;
       }
       case 2: {
-        this.pageSlice = this.listRegister.slice(0, 2);
+        this.pageSlice = this.listRegister.slice(0, 10);
         this.paginator.length = this.listRegister.length;
         this.ChosenList = this.listRegister;
         break;
       }
       case 3: {
-        this.pageSlice = this.listSold.slice(0, 2);
+        this.pageSlice = this.listSold.slice(0, 10);
         this.paginator.length = this.listSold.length;
         this.ChosenList = this.listSold;
         break;
       }
       case 4: {
-        this.pageSlice = this.listExpire.slice(0, 2);
+        this.pageSlice = this.listExpire.slice(0, 10);
         this.paginator.length = this.listExpire.length;
         this.ChosenList = this.listExpire;
         break;
@@ -324,9 +394,48 @@ export class ManageProductUserComponent implements OnInit {
     }
 
     this.paginator.pageIndex = 0;
-    this.paginator.pageSize = 2;
+    this.paginator.pageSize = 10;
+  }
+  base64ToBlob(base64Data: string, contentType: string): File {
+    console.log(base64Data)
+    contentType = contentType || '';
+    const sliceSize = 512;
+
+    const base64Index = base64Data.indexOf(';base64,');
+    if (base64Index !== -1) {
+        base64Data = base64Data.slice(base64Index + 8);
+    }
+
+    const byteCharacters = atob(base64Data);
+    const byteArrays: Uint8Array[] = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: contentType });
+    if (!contentType.startsWith('image/') && blob.type.startsWith('image/')) {
+      contentType = blob.type;
   }
 
+  const file = new File([blob], 'image.jpeg', { type: contentType });
+  console.log(file)
+    return file;
+  }
+  isBase64(file: string) {
+    // Regular expression to match a base64 string
+    const base64Regex = /^data:(.+);base64,(.*)$/;
+    
+    // Check if the file content matches the base64 regex
+    return base64Regex.test(file);
+  }  
   onPageChange(event: PageEvent) {
     const startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
@@ -336,11 +445,12 @@ export class ManageProductUserComponent implements OnInit {
     this.pageSlice = this.ChosenList.slice(startIndex, endIndex);
   }
   onSubmit(): void {
+    
     this.productService
       .createProduct(this.CreateProductForm, this.files)
       .subscribe({
-        next: () => {},
-        error: () => {},
+        next: () => { },
+        error: () => { },
         complete: () => {
           var answer = window.alert('Success');
           this.onCancel();

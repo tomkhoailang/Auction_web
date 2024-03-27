@@ -5,6 +5,7 @@ import { ProductService } from '../../../services/product.service';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-products',
@@ -23,11 +24,12 @@ export class ProductsComponent {
   ProductSave: any[] = [];
   pageSlice: any[] = [];
   selectedProduct: any;
-  ChatRoom: any;
+  ChatRoomUsers: any[] = [];
   ChatRoomId: any;
   selectedImage: any;
   currentTime: any;
   StatusList: any[] = [];
+  imgObject: any[] = [];
   userId: any;
   files: any = [];
   uploadedImages: string[] = [];
@@ -37,10 +39,12 @@ export class ProductsComponent {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
+    private toast: NgToastService,
     private productService: ProductService,
     private http: HttpClient
-  ) {}
+  ) { }
   ngOnInit(): void {
+    this.userId = sessionStorage?.getItem('id');
     this.CreateProductForm = this.fb.group({
       Name: ['', []],
       MinimumPrice: ['', []],
@@ -52,11 +56,20 @@ export class ProductsComponent {
     });
     if (typeof document != 'undefined') {
       this.currentTime = new Date(Date.now());
-
+      this.chatRoomService.getUserChatRooms().subscribe((data: any) =>
+        this.ChatRoomUsers = data.response
+      );
       this.productService.getProductsWithStatus(2).subscribe((data: any) => {
         console.log('this is data', data);
         this.ProductList = data.response;
         this.ProductSave = data.response;
+        this.ProductList.forEach(element => {
+
+          element.images.forEach((image: any) => {
+            this.loadImage(image.image, element.productId)
+          });
+        });
+        console.log("test", this.imgObject)
         this.selectedProduct = this.ProductList[0];
         this.selectedImage =
           'productImages/' + this.selectedProduct.images[0]?.image;
@@ -69,6 +82,14 @@ export class ProductsComponent {
   isYourProduct(sellerId: string): boolean {
     return sellerId === this.userId;
   }
+
+  isExpired(endTime: any) {
+    let end = new Date(endTime);
+    console.log(end)
+    if (end > this.currentTime)
+      return true;
+    return false;
+  }
   compareTime(startTime: any) {
     if (startTime && startTime < this.currentTime) {
       return true; // biddingStartTime is sooner than currentTime
@@ -78,26 +99,42 @@ export class ProductsComponent {
   }
 
   changeImage(image: any) {
-    this.selectedImage = 'productImages/' + image;
+    this.selectedImage = image;
   }
 
   setSelectedProduct(product: any) {
     this.selectedProduct = product;
-    this.selectedImage = 'productImages/' + product.images[0].image;
+    this.selectedImage = this.getImage(product.productId)[0];
     console.log(this.selectedProduct);
   }
 
   joinChatRoom(chatRoomId: number) {
     console.log(chatRoomId);
-    this.chatRoomService.joinChatRoom(chatRoomId).subscribe({
-      next: () => {},
-      error: () => {},
-      complete: () => {
-        var answer = window.alert('Success');
-        window.location.reload();
-      },
+    var hadJoined = false;
+    this.ChatRoomUsers.forEach(element => {
+      if (element.chatRoomId == chatRoomId) {
+        hadJoined = true;
+      }
     });
+    if (hadJoined) {
+      this.toast.success({
+        detail: 'Success',
+        summary: 'You have joined chat room of this product.',
+        duration: 5000,
+      });
+    }
+    else {
+      this.chatRoomService.joinChatRoom(chatRoomId).subscribe({
+        next: () => { },
+        error: () => { },
+        complete: () => {
+          var answer = window.alert('Success');
+          window.location.reload();
+        },
+      });
+    }
   }
+
 
   onSortByItemClick(index: number): void {
     if (this.sortBy != index) {
@@ -178,8 +215,8 @@ export class ProductsComponent {
   resetPaginator(): void {
     this.paginator.length = this.ProductList.length; // Set the length of the paginator
     this.paginator.pageIndex = 0; // Reset the page index to 0
-    this.paginator.pageSize = 2;
-    this.pageSlice = this.ProductList.slice(0, 2);
+    this.paginator.pageSize = 10;
+    this.pageSlice = this.ProductList.slice(0, 10);
   }
 
   formatDate(dateString: string): any {
@@ -204,6 +241,36 @@ export class ProductsComponent {
         day: 'numeric',
       });
     }
+  }
+
+  loadImage(imgName: string, productId: number) {
+    this.productService.getImage(imgName).subscribe(
+      (data: Blob) => {
+        // debugger
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imageData = reader.result;
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
+          if (existingProductIndex !== -1) {
+            // Product already exists, append image data
+            this.imgObject[existingProductIndex].images.push(imageData);
+          } else {
+            // Product doesn't exist, create new object
+            this.imgObject.push({ productId: productId, images: [imageData] });
+          }
+        };
+        reader.readAsDataURL(data);
+      },
+      (error) => {
+        console.error('Error loading image:', error);
+      }
+    );
+
+  }
+
+  getImage(productId: number) {
+    const product = this.imgObject.find(element => element.productId === productId);
+    return product ? product.images : [];
   }
 
   handleInput(event: any) {

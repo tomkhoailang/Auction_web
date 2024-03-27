@@ -49,3 +49,7 @@ th {
     color: #ffffff;
     /* Change to the desired active text color */   
 }
+
+.highlight {
+    background-color: orange; /* Change this to whatever highlight color you prefer */
+  }

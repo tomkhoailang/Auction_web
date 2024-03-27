@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +47,7 @@ export class ProductService {
     return this.http.get(url);
   }
   getProductListFromUser() {
-    let url = `http://localhost:5274/api/user/products`;
+    let url = `http://localhost:5274/api/product/user`;
     return this.http.get(url);
   }
   getStatusList() {
@@ -58,6 +59,10 @@ export class ProductService {
     return this.http.delete(url);
   }
 
+  getImage(imgName: string) {
+    let url = `http://localhost:5274/api/Product/images?imgName=${imgName}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
   getProduct(productId: number) {
     let url = `http://localhost:5274/api/Product/${productId}`;
     return this.http.get(url);

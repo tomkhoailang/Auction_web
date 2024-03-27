@@ -254,3 +254,14 @@ img {
   height: 516px;
   overflow-y: auto;
 }
+
+.image-container {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping to next line */
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+}
+
+.image-container img {
+  margin-right: 10px; /* Optional: Add some space between images */
+}

@@ -18,11 +18,16 @@
                         <th scope="row">{{i+1}}</th>
                         <th scope="row">
                             <div>
-                                <img [src]="
+                                <!-- <img [src]="
                               product.images[0]
                                 ? 'productImages/' + product.images[0].image
                                 : 'https://via.placeholder.com/150'
-                            " class="avatar-md img-thumbnail " alt="Product Image" />
+                            " class="avatar-md img-thumbnail " alt="Product Image" /> -->
+                                            <img
+                                            [src]="getImage(product.productId)[0]"
+                                            class="avatar-md img-thumbnail "
+                                            alt="Product Image"
+                                          />
                             </div>
                         </th>
                         <th scope="row">{{product.name}}</th>

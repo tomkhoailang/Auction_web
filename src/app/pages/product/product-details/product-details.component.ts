@@ -21,13 +21,11 @@ export class ProductDetailsComponent {
   ){}
 
   ngOnInit(): void {
-    console.log('aaa')
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
       console.log(this.userId)
       this.chatRoomService.getAllChatRooms().subscribe((data: any) => {
         console.log(data)
-        console.log('bbbb')
         this.ChatRoomList = data.response;
       })
 

@@ -78,4 +78,9 @@ export class ProductService {
     let url = `http://localhost:5274/api/Product/${productId}/productStatuses`;
     return this.http.post(url, productId);
   }
+
+  getBiddingsProducts() {
+    let url = `http://localhost:5274/api/Product/history`;
+    return this.http.get(url);
+  }
 }

@@ -79,6 +79,9 @@ export class NavbarComponent {
   redirectToUserProducts(): void {
     this.router.navigateByUrl('/product/manage-user');
   }
+  redirectToUserBiddings(): void {
+    this.router.navigateByUrl('/product/user-biddings');
+  }
   redirectToHomepage(): void {
     this.router.navigateByUrl('/welcome');
   }

@@ -52,7 +52,7 @@ export class ManageProductUserComponent implements OnInit {
     private http: HttpClient,
     private location: Location,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.CreateProductForm = this.fb.group({
       Name: ['', [Validators.required]],
@@ -70,17 +70,18 @@ export class ManageProductUserComponent implements OnInit {
         if (data) {
           this.ProductList = data.response;
           console.log(this.ProductList);
-          this.ProductList.forEach((element) => {
+          this.ProductList.forEach(element => {
+
             element.images.forEach((image: any) => {
-              this.loadImage(image.image, element.productId);
+              this.loadImage(image.image, element.productId)
             });
           });
-          console.log('test1111', this.ProductList[4]);
+          console.log("test", this.imgObject)
 
           this.ProductList.forEach((element) => {
             switch (
-              element.productInStatuses[element.productInStatuses.length - 1]
-                .productStatusId
+            element.productInStatuses[element.productInStatuses.length - 1]
+              .productStatusId
             ) {
               case 1: {
                 console.log(
@@ -101,10 +102,12 @@ export class ManageProductUserComponent implements OnInit {
                     element.chatRoomProducts.length - 1
                   ].biddingEndTime
                 );
+                console.log(endDate)
                 if (endDate <= this.currentDate) {
                   if (element.biddings && element.biddings.length > 0) {
                     this.listSold.push(element);
-                  } else {
+                  }
+                  else {
                     this.listExpire.push(element);
                   }
                 } else {
@@ -137,14 +140,12 @@ export class ManageProductUserComponent implements OnInit {
 
   loadImage(imgName: string, productId: number) {
     this.productService.getImage(imgName).subscribe(
-      (data: Blob) => {
+      (data: any) => {
         // debugger
         const reader = new FileReader();
         reader.onload = () => {
           const imageData = reader.result;
-          const existingProductIndex = this.imgObject.findIndex(
-            (obj) => obj.productId === productId
-          );
+          const existingProductIndex = this.imgObject.findIndex(obj => obj.productId === productId);
           if (existingProductIndex !== -1) {
             // Product already exists, append image data
             this.imgObject[existingProductIndex].images.push(imageData);
@@ -159,19 +160,18 @@ export class ManageProductUserComponent implements OnInit {
         console.error('Error loading image:', error);
       }
     );
+
   }
 
   getImage(productId: number) {
-    const product = this.imgObject.find(
-      (element) => element.productId === productId
-    );
+    const product = this.imgObject.find(element => element.productId === productId);
     return product ? product.images : [];
   }
 
   ContinueBidding(productId: number) {
     this.productService.continueBidding(productId).subscribe({
-      next: () => {},
-      error: () => {},
+      next: () => { },
+      error: () => { },
       complete: () => {
         var answer = window.alert('Success');
         this.onCancel();
@@ -200,53 +200,29 @@ export class ManageProductUserComponent implements OnInit {
       this.uploadedImages.push(image);
       this.files.push(image);
     });
-    console.log('upload images ', this.uploadedImages);
-    console.log('upload files ', this.files);
+    console.log("upload images ", this.uploadedImages)
+    console.log("upload files ", this.files)
 
-    // for (let i = 0; i < this.ProductList.at(index).images.length; i++) {
-    //   const imageUrl = ('productImages/' +
-    //     this.ProductList.at(index)?.images[i].image) as string; // Adjust the path to your image file
-    //   fetch(imageUrl)
-    //     .then((response) => {
-    //       console.log('this is res', response);
-    //       return response.blob();
-    //     })
-    //     .then((blob) => {
-    //       console.log(this.ProductList.at(index)?.images[i].image);
-    //       const file = new File(
-    //         [blob],
-    //         this.ProductList.at(index)?.images[i].image as string
-    //       ); // Create a File object
-
-    //       this.files.push(file);
-    //       this.displayImage(file);
-    //     })
-    //     .catch((error) => {
-    //       console.log(imageUrl);
-    //       console.error('Error fetching image:', error);
-    //     });
-    // }
   }
   EditProductInfo(): void {
     this.files.forEach((element: any, index: number) => {
-      if (this.isBase64(element)) {
-        const file = this.base64ToBlob(element, 'image/jpeg');
-        if (file) {
+      if(this.isBase64(element)){
+        const file = this.base64ToBlob(element,"image/jpeg");
+        if(file){
           this.files[index] = file;
         }
-        console.log('element: ', this.files[index]);
+        console.log("element: ", this.files[index])
       }
     });
-    console.log('after convert ', this.files);
+    console.log("after convert ", this.files)
     this.productService
       .editProduct(this.CreateProductForm, this.files, this.productIdEdit)
       .subscribe({
-        next: () => {},
-        error: () => {},
+        next: () => { },
+        error: () => { },
         complete: () => {
           var answer = window.alert('Success');
           this.onCancel();
-          // debugger;
 
           window.location.reload();
         },
@@ -264,8 +240,14 @@ export class ManageProductUserComponent implements OnInit {
     this.files = [];
     this.areSubmit = true;
     this.productIdEdit = null;
+    this.selectedRowIndex = -1;
   }
 
+  transform(value: number): string {
+    // Assuming the value is in VND
+    const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return formattedValue;
+  }
   getCurrentDateTime(): string {
     const now = new Date();
     // Format the current date and time to match the format required by datetime-local input
@@ -281,14 +263,31 @@ export class ManageProductUserComponent implements OnInit {
     return (num < 10 ? '0' : '') + num;
   }
 
-  DeleteProduct(productId: number, index: number): void {
+  DeleteProduct(product: any, index: number): void {
     var answer = window.confirm('Save data?');
     if (answer) {
-      this.ProductList.splice(index, 1);
-      this.productService.deleteProduct(productId).subscribe((a: any) => {});
+      var a = this.ProductList.indexOf(product)
+      if(a){
+        this.ProductList.splice(a, 1);
+      }
+      a = this.listWaiting.indexOf(product)
+      if(a){
+        this.listWaiting.splice(a, 1);
+      }
+      a = this.pageSlice.indexOf(product)
+      if(a){
+        this.pageSlice.splice(a, 1);
+      }
+      // console.log(product.productId);
+      // debugger
+      this.productService.deleteProduct(product.productId).subscribe((a: any) => {
+        window.location.reload();
+      });
+
       if (index === this.selectedRowIndex) {
         this.selectedRowIndex = -1;
       }
+      
     } else {
     }
   }
@@ -327,7 +326,7 @@ export class ManageProductUserComponent implements OnInit {
         this.displayImage(files[i]);
       }
     }
-    console.log('After add file', this.files);
+    console.log('After add file',this.files);
   }
   displayImage(file: File): void {
     const reader = new FileReader();
@@ -357,7 +356,7 @@ export class ManageProductUserComponent implements OnInit {
       inputElement.files = fileList.files;
     }
 
-    console.log('after delete', this.files, this.uploadedImages);
+    console.log('after delete', this.files, this.uploadedImages)
   }
 
   setActiveTable(tableNumber: number) {
@@ -397,45 +396,45 @@ export class ManageProductUserComponent implements OnInit {
     this.paginator.pageSize = 10;
   }
   base64ToBlob(base64Data: string, contentType: string): File {
-    console.log(base64Data);
+    console.log(base64Data)
     contentType = contentType || '';
     const sliceSize = 512;
 
     const base64Index = base64Data.indexOf(';base64,');
     if (base64Index !== -1) {
-      base64Data = base64Data.slice(base64Index + 8);
+        base64Data = base64Data.slice(base64Index + 8);
     }
 
     const byteCharacters = atob(base64Data);
     const byteArrays: Uint8Array[] = [];
-
+  
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
       const slice = byteCharacters.slice(offset, offset + sliceSize);
-
+  
       const byteNumbers = new Array(slice.length);
       for (let i = 0; i < slice.length; i++) {
         byteNumbers[i] = slice.charCodeAt(i);
       }
-
+  
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
     const blob = new Blob(byteArrays, { type: contentType });
     if (!contentType.startsWith('image/') && blob.type.startsWith('image/')) {
       contentType = blob.type;
-    }
+  }
 
-    const file = new File([blob], 'image.jpeg', { type: contentType });
-    console.log(file);
+  const file = new File([blob], 'image.jpeg', { type: contentType });
+  console.log(file)
     return file;
   }
   isBase64(file: string) {
     // Regular expression to match a base64 string
     const base64Regex = /^data:(.+);base64,(.*)$/;
-
+    
     // Check if the file content matches the base64 regex
     return base64Regex.test(file);
-  }
+  }  
   onPageChange(event: PageEvent) {
     const startIndex = event.pageIndex * event.pageSize;
     let endIndex = startIndex + event.pageSize;
@@ -445,11 +444,12 @@ export class ManageProductUserComponent implements OnInit {
     this.pageSlice = this.ChosenList.slice(startIndex, endIndex);
   }
   onSubmit(): void {
+    
     this.productService
       .createProduct(this.CreateProductForm, this.files)
       .subscribe({
-        next: () => {},
-        error: () => {},
+        next: () => { },
+        error: () => { },
         complete: () => {
           var answer = window.alert('Success');
           this.onCancel();

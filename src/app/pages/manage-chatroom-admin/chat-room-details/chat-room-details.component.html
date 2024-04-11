@@ -18,17 +18,17 @@
                 <div class="col-lg-5">
                   <div class="candidate-list-content mt-3 mt-lg-0">
                     <h5 class="fs-19 mb-0">
-                      <a class="primary-link">{{ChatRoom.chatRoomId}}</a>
+                      <a class="primary-link">{{ChatRoom?.chatRoomId}}</a>
                     </h5>
                     <br />
                     <ul class="list-inline mb-0 text-muted">
                       <li class="list-inline-item">
-                        <i class="mdi mdi-map-marker"></i>{{ formatDate(ChatRoom.startDate) }}
+                        <i class="mdi mdi-map-marker"></i>{{ formatDate(ChatRoom?.startDate) }}
                       </li>
                       To
                       <li class="list-inline-item">
                         <i class="mdi mdi-wallet"></i>
-                        {{ formatDate(ChatRoom.endDate) }}
+                        {{ formatDate(ChatRoom?.endDate) }}
                       </li>
                     </ul>
                   </div>
@@ -51,8 +51,6 @@
                   <div class="col-auto">
                     <div class="candidate-list-images">
                       <a>
-                        <!-- <img class="avatar-md img-thumbnail" *ngIf="product?.images && product.images.length > 0"
-                          [src]="'productImages/' + product.images[0].image" alt /> -->
                           <img
                           class="avatar-md img-thumbnail"
                           [src]="getImage(product.productId)[0]"
@@ -68,21 +66,21 @@
                         <a class="primary-link">Name: {{product.name}}</a>
                       </h5>
                       <p class="fs-19 mb-0">
-                        <a class="primary-link">Initial Price: {{product.initialPrice}}</a>
+                        <a class="primary-link">Initial Price: {{transform(product.initialPrice)}}</a>
                       </p>
                       <p class="fs-19 mb-0">
-                        <a class="primary-link">Minimum Step:{{product.minimumStep}}</a>
+                        <a class="primary-link">Minimum Step: {{transform(product.minimumStep)}}</a>
                       </p>
                       <br />
                       <ul class="list-inline mb-0 text-muted">
                         <li class="list-inline-item">
-                          <i class="mdi mdi-map-marker"></i>{{ formatDate(product.chatRoomProducts[0].biddingStartTime)
+                          <i class="mdi mdi-map-marker"></i>{{ formatDate(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingStartTime)
                           }}
                         </li>
                         To
                         <li class="list-inline-item">
                           <i class="mdi mdi-wallet"></i>
-                          {{ formatDate(product.chatRoomProducts[0].biddingEndTime) }}
+                          {{ formatDate(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime) }}
                         </li>
                       </ul>
                     </div>
@@ -147,10 +145,10 @@
                       <div class="mt-4 mb-3">
                         <h3 class="text-uppercase text-muted brand">{{selectedProduct?.name}}</h3>
                         <div class="price d-flex flex-row align-items-center">
-                          <span>${{selectedProduct?.initialPrice}}</span>
+                          <span>Price: {{transform(selectedProduct?.initialPrice)}}</span>
                         </div>
-                        <div class="price d-flex flex-row align-items-center"> <span>Minimum Step:
-                            {{selectedProduct?.minimumStep}}</span>
+                        <div class="price d-flex flex-row align-items-center"> <span>Min Step:
+                            {{transform(selectedProduct?.minimumStep)}}</span>
                         </div>
                       </div>
                       <p class="about">{{selectedProduct?.description}}</p>

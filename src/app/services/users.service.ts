@@ -40,7 +40,7 @@ export class UsersService {
   signUp(formData: FormGroup) {
     const signUpCredentials = {
       ...formData.value,
-      role: 'User',
+      role: 'Admin',
     };
     let url = 'http://localhost:5274/api/authentication/sign-up';
     return this.http.post(url, signUpCredentials);

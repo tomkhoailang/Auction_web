@@ -18,6 +18,7 @@ import { ChatRoomDetailsComponent } from './pages/manage-chatroom-admin/chat-roo
 import { ChatRoomEditComponent } from './pages/manage-chatroom-admin/chat-room-edit/chat-room-edit.component';
 import { ProductDetailsComponent } from './pages/product/product-details/product-details.component';
 import { ProductsComponent } from './pages/product/products/products.component';
+import { UserBiddingsComponent } from './pages/product/user-biddings/user-biddings.component';
 
 
 const routes: Routes = [
@@ -64,6 +65,7 @@ const routes: Routes = [
   { path: 'product/manage-user', component: ManageProductUserComponent, canActivate: [PermissionsService]},
   { path: 'product/products', component: ProductsComponent, canActivate: [PermissionsService] },
   { path: 'product/product-details', component: ProductDetailsComponent, canActivate: [PermissionsService] },
+  { path: 'product/user-biddings', component: UserBiddingsComponent, canActivate: [PermissionsService] },
   { path: 'product/product-details/:ProductId', component: ProductDetailsComponent, canActivate: [PermissionsService] },
   { path: 'manage-chatroom-admin/create-chat-room', component: CreateChatRoomComponent, canActivate: [PermissionsService]},
   { path: 'manage-chatroom-admin/chatrooms', component: ChatroomsComponent, canActivate: [PermissionsService]},

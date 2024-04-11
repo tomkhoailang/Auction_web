@@ -75,10 +75,10 @@
                           {{ product.description }}
                         </p>
                         <p class="card-text">
-                          Initial Price: {{ product.initialPrice }} VNĐ
+                          Initial Price: {{ transform(product.initialPrice) }} VNĐ
                         </p>
                         <p class="card-text">
-                          Minimum Step: {{ product.minimumStep }} VNĐ
+                          Minimum Step: {{ transform(product.minimumStep) }} VNĐ
                         </p>
                         <div *ngIf="
                             this.getProductInChatService()
@@ -185,11 +185,11 @@
                   {{ selectedProduct?.name }}
                 </h1>
                 <div class="price d-flex flex-row align-items-center">
-                  <span>Price: {{ selectedProduct?.initialPrice }}$</span>
+                  <span>Price: {{ transform(selectedProduct?.initialPrice) }}</span>
                 </div>
                 <div class="price d-flex flex-row align-items-center">
                   <span>Min Step:
-                    {{ selectedProduct?.minimumStep }}$</span>
+                    {{ transform(selectedProduct?.minimumStep) }}</span>
                 </div>
               </div>
               <p class="about">Description:<br><em>{{ selectedProduct?.description }}</em></p>

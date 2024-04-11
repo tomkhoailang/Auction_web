@@ -192,12 +192,12 @@
                       </h5>
                       <p class="fs-19 mb-0">
                         <a class="primary-link"
-                          >Initial Price: {{ product.initialPrice }}</a
+                          >Initial Price: {{ transform(product.initialPrice) }}</a
                         >
                       </p>
                       <p class="fs-19 mb-0">
                         <a class="primary-link"
-                          >Minimum Step:{{ product.minimumStep }}</a
+                          >Minimum Step: {{ transform(product.minimumStep) }}</a
                         >
                       </p>
                       <br />
@@ -240,7 +240,9 @@
                           Details
                         </button>
                         <button
-                          *ngIf="isYourProduct(product?.sellerId)  || isExpired(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime)"
+                          *ngIf="!isYourProduct(product?.sellerId)
+                          && isExpired(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime) 
+                          && isJoining(product.chatRoomProducts[product.chatRoomProducts.length - 1].chatRoomId)"
                           class="btn btn-success"
                           (click)="
                             joinChatRoom(product.chatRoomProducts[product.chatRoomProducts.length - 1].chatRoomId)
@@ -324,12 +326,12 @@
                           {{ selectedProduct?.name }}
                         </h3>
                         <div class="price d-flex flex-row align-items-center">
-                          <span>${{ selectedProduct?.initialPrice }}</span>
+                          <span>{{ transform(selectedProduct?.initialPrice) }}</span>
                         </div>
                         <div class="price d-flex flex-row align-items-center">
                           <span
                             >Minimum Step:
-                            {{ selectedProduct?.minimumStep }}</span
+                            {{ transform(selectedProduct?.minimumStep) }}</span
                           >
                         </div>
                       </div>

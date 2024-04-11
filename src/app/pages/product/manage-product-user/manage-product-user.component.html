@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8">
-      <nav class="nav nav-pills nav-justified">
+      <nav class="nav nav-pills nav-justified" style="margin-top: 20px;">
         <button
           class="nav-link active"
           (click)="setActiveTable(1)"
@@ -60,10 +60,10 @@
               {{ product.description }}
             </td>
             <td scope="row" [ngClass]="{ highlight: selectedRowIndex === i }">
-              {{ product.initialPrice }}
+              {{ transform(product.initialPrice) }}
             </td>
             <td scope="row" [ngClass]="{ highlight: selectedRowIndex === i }">
-              {{ product.minimumStep }}
+              {{ transform(product.minimumStep) }}
             </td>
             <td scope="row" [ngClass]="{ highlight: selectedRowIndex === i }">
               <div>
@@ -78,7 +78,7 @@
               <div>
                 <button
                   id="del"
-                  (click)="DeleteProduct(product.productId, i)"
+                  (click)="DeleteProduct(product, i)"
                   style="height: 25; width: 65px; margin-top: 10px"
                 >
                   Delete
@@ -114,20 +114,20 @@
             </th>
             <th scope="row">{{ product.name }}</th>
             <th scope="row">{{ product.description }}</th>
-            <th scope="row">{{ product.initialPrice }}</th>
-            <th scope="row">{{ product.minimumStep }}</th>
+            <th scope="row">{{ transform(product.initialPrice) }}</th>
+            <th scope="row">{{ transform(product.minimumStep) }}</th>
             <th>
               <ul class="list-inline mb-0 text-muted">
                 <li class="list-inline-item">
                   <i class="mdi mdi-map-marker"></i
                   >{{
-                    formatDate(product.chatRoomProducts[0].biddingStartTime)
+                    formatDate(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingStartTime)
                   }}
                 </li>
                 To
                 <li class="list-inline-item">
                   <i class="mdi mdi-wallet"></i>
-                  {{ formatDate(product.chatRoomProducts[0].biddingEndTime) }}
+                  {{ formatDate(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime) }}
                 </li>
               </ul>
             </th>
@@ -160,25 +160,12 @@
             </th>
             <th scope="row">{{ product.name }}</th>
             <th scope="row">{{ product.description }}</th>
-            <th scope="row">{{ product.initialPrice }}</th>
-            <th scope="row">{{ product.minimumStep }}</th>
-            <th>
-              <div>
-                <p>
-                  Amount:
-                  {{
-                    product.biddings[product.biddings.length - 1]?.biddingAmount
-                  }}
-                </p>
-              </div>
-              <div>
-                <p>
-                  User:
-                  {{
-                    product.biddings[product.biddings.length - 1]?.biddingUserId
-                  }}
-                </p>
-              </div>
+            <th scope="row">{{ transform(product.initialPrice) }}</th>
+            <th scope="row">{{ transform(product.minimumStep) }}</th>
+            <th scope="row">
+              {{
+                transform(product.biddings[product.biddings.length - 1]?.biddingAmount)
+              }}
             </th>
           </tr>
         </tbody>
@@ -218,12 +205,12 @@
             </th>
             <th scope="row">{{ product.name }}</th>
             <th scope="row">{{ product.description }}</th>
-            <th scope="row">{{ product.initialPrice }}</th>
-            <th scope="row">{{ product.minimumStep }}</th>
+            <th scope="row">{{ transform(product.initialPrice) }}</th>
+            <th scope="row">{{ transform(product.minimumStep) }}</th>
             <th>
               <div>
                 <div>
-                  {{ formatDate(product.chatRoomProducts[0].biddingEndTime) }}
+                  {{ formatDate(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime) }}
                 </div>
                 <button id="edi" (click)="ContinueBidding(product.productId)">
                   Continue Bidding
@@ -320,10 +307,11 @@
             id="btnsubmit"
             type="submit"
             (click)="onSubmit()"
+            [disabled]="!this.CreateProductForm.valid"
             class="btn btn-primary"
             style="margin-bottom: 20px"
           >
-            Submit
+            New Product
           </button>
 
           <button
@@ -341,7 +329,7 @@
             id="btncancel"
             type="button"
             (click)="onCancel()"
-            class="btn btn-primary"
+            class="btn btn-warning"
             style="margin-bottom: 20px; margin-inline: 20px"
           >
             Cancel

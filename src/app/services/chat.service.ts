@@ -39,7 +39,7 @@ export class ChatService {
       'BiddingAmount:',
       (user: string, newBiddingAmount: number, messageTime: string) => {
         this.biddingAmount$.next(newBiddingAmount);
-        let biddingMessage = `${user} has bid ${newBiddingAmount}`;
+        let biddingMessage = `${user} has bidded ${newBiddingAmount}`;
 
         this.biddingMessages = [
           ...this.biddingMessages,

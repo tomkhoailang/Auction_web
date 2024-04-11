@@ -43,6 +43,7 @@ import { ChatRoomDetailsComponent } from './pages/manage-chatroom-admin/chat-roo
 import { ChatRoomEditComponent } from './pages/manage-chatroom-admin/chat-room-edit/chat-room-edit.component';
 import { ProductDetailsComponent } from './pages/product/product-details/product-details.component';
 import { ProductsComponent } from './pages/product/products/products.component';
+import { UserBiddingsComponent } from './pages/product/user-biddings/user-biddings.component';
 
 
 @NgModule({
@@ -66,7 +67,9 @@ import { ProductsComponent } from './pages/product/products/products.component';
     ChatRoomDetailsComponent,
     ChatRoomEditComponent,
     ProductDetailsComponent,
-    ProductsComponent
+    UserBiddingsComponent,
+    ProductsComponent,
+    UserBiddingsComponent
 
   ],
   imports: [

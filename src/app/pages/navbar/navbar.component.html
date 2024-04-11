@@ -52,6 +52,14 @@
             >Your product</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            (click)="redirectToUserBiddings()"
+            style="cursor: pointer"
+            >History Biddings</a
+          >
+        </li>
       </ul>
       <ul
         *ngIf="this.role === 'Admin'"

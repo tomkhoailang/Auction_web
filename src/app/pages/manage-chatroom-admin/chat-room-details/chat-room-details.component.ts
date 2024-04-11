@@ -50,7 +50,7 @@ export class ChatRoomDetailsComponent {
           });
           console.log("test", this.imgObject)
           this.selectedProduct = this.ProductList[0];
-          this.selectedImage = 'productImages/' + this.selectedProduct.images[0].image;
+          this.selectedImage = 'https://bootdey.com/img/Content/avatar/avatar1.png';
           console.log(this.ProductList)
         })
       }
@@ -92,7 +92,7 @@ export class ChatRoomDetailsComponent {
   DeleteThisChatRoom() {
     var answer = window.confirm("Delete this Chat Room?");
     if (answer) {
-      this.chatRoomService.deleteChatRoom(this.ChatRoom.chatRoomId).subscribe({  
+      this.chatRoomService.deleteChatRoom(this.ChatRoom?.chatRoomId).subscribe({  
           next: () => { },
           error: () => { },
           complete: () => { var answer = window.alert("Success");   
@@ -116,12 +116,18 @@ export class ChatRoomDetailsComponent {
     console.log(this.selectedImage)
   }
 
+  transform(value: number): string {
+    // Assuming the value is in VND
+    const formattedValue = value?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return formattedValue;
+  }
+  
   EditThisChatRoom(ChatRoomId: number) {
     this.router.navigateByUrl(`/manage-chatroom-admin/chat-room-edit/${ChatRoomId}`)
   }
 
   isBidding(chatRoom: any){
-    let startChatRoom = new Date(chatRoom.startDate);
+    let startChatRoom = new Date(chatRoom?.startDate);
     if(startChatRoom>this.currentTime){
       return true;
     }
@@ -141,7 +147,7 @@ export class ChatRoomDetailsComponent {
       date.getMonth() === now.getMonth() &&
       date.getFullYear() === now.getFullYear()
     ) {
-      return 'Today ' + date.toLocaleTimeString('en-US', options);
+      return 'Today ' + date?.toLocaleTimeString('en-US', options);
     } else {
       return date.toLocaleTimeString('en-Us', {
         year: 'numeric',

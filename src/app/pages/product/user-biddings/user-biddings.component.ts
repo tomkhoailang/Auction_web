@@ -8,11 +8,11 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NgToastService } from 'ng-angular-popup';
 
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrl: './products.component.css',
+  selector: 'app-user-biddings',
+  templateUrl: './user-biddings.component.html',
+  styleUrl: './user-biddings.component.css'
 })
-export class ProductsComponent {
+export class UserBiddingsComponent {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   sortBy: number = -1; // Initial value for sortBy
@@ -20,6 +20,7 @@ export class ProductsComponent {
 
   sortList: string[] = ['Name', 'Initial Price', 'Minimum Step', 'Start Date'];
   orderList: string[] = ['A - Z', 'Z - A'];
+  biddingList: any[] = [];
   ProductList: any[] = [];
   ProductSave: any[] = [];
   pageSlice: any[] = [];
@@ -28,7 +29,6 @@ export class ProductsComponent {
   ChatRoomId: any;
   selectedImage: any;
   currentTime: any;
-  StatusList: any[] = [];
   imgObject: any[] = [];
   userId: any;
   files: any = [];
@@ -59,7 +59,7 @@ export class ProductsComponent {
       this.chatRoomService.getUserChatRooms().subscribe((data: any) =>
         this.ChatRoomUsers = data.response
       );
-      this.productService.getProductsWithStatus(2).subscribe((data: any) => {
+      this.productService.getBiddingsProducts().subscribe((data: any) => {
         console.log('this is data', data);
         this.ProductList = data.response;
         this.ProductSave = data.response;
@@ -72,7 +72,7 @@ export class ProductsComponent {
         console.log("test", this.imgObject)
         this.selectedProduct = this.ProductList[0];
         this.selectedImage = 'https://bootdey.com/img/Content/avatar/avatar1.png';
-
+        this.biddingList = this.selectedProduct.biddings;
         this.pageSlice = this.ProductList.slice(0, 10);
         console.log(this.ProductList);
       });
@@ -117,33 +117,23 @@ export class ProductsComponent {
     console.log(this.selectedProduct);
   }
 
-  joinChatRoom(chatRoomId: number) {
-    console.log(chatRoomId);
-    var hadJoined = false;
-    this.ChatRoomUsers.forEach(element => {
-      if (element.chatRoomId == chatRoomId) {
-        hadJoined = true;
+  setSelectedBidding(product: any) {
+    this.biddingList = [];
+    product.biddings.forEach((element:any) => {
+      if(element.biddingUserId == this.userId){
+        this.biddingList.push(element);
       }
     });
-    if (hadJoined) {
-      this.toast.success({
-        detail: 'Success',
-        summary: 'You have joined chat room of this product.',
-        duration: 5000,
-      });
-    }
-    else {
-      this.chatRoomService.joinChatRoom(chatRoomId).subscribe({
-        next: () => { },
-        error: () => { },
-        complete: () => {
-          var answer = window.alert('Success');
-          window.location.reload();
-        },
-      });
-    }
   }
 
+  ResultBidding(product: any) {
+    if(product.biddings[product.biddings.length - 1].biddingUserId == this.userId){
+      return true;
+    }    
+    else{
+      return false;
+    }   
+  }
 
   onSortByItemClick(index: number): void {
     if (this.sortBy != index) {
@@ -230,12 +220,14 @@ export class ProductsComponent {
 
   transform(value: number): string {
     // Assuming the value is in VND
-    const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    const formattedValue = value?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     return formattedValue;
   }
 
   formatDate(dateString: string): any {
+    console.log(dateString)
     const date = new Date(dateString);
+    console.log(date)
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
       hour: 'numeric',

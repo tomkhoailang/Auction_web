@@ -112,6 +112,14 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
       biddingValue: ['', [Validators.required]],
     });
   }
+  transform(value: number): string {
+    if(value){
+      const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+      return formattedValue;
+    }
+    // Assuming the value is in VND
+    return '';
+  }
   loadImage(imgName: string, productId: number) {
     this.productService.getImage(imgName).subscribe(
       (data: Blob) => {
@@ -185,7 +193,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
         if (this.currentBiddingPrice) {
           this.chatService.biddingAmount$.subscribe((biddingAmount: number) => {
             this.currentBiddingPrice.nativeElement.innerHTML =
-              biddingAmount + 'VND';
+               this.transform(biddingAmount);
             console.log('test', biddingAmount);
             if (!Array.isArray(biddingAmount)) {
               this.minBidding =
@@ -202,12 +210,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
             console.log('min bid 1:', this.minBidding);
           });
-          if (this.currentBiddingPrice.nativeElement.innerHTML === 'VND') {
+          if (this.currentBiddingPrice.nativeElement.innerHTML === '') {
             if (this.productInChatService.currentBiddingProduct === undefined) {
               this.currentBiddingPrice.nativeElement.innerHTML = '0 VND';
             } else {
               this.currentBiddingPrice.nativeElement.innerHTML =
-                this.productInChatService.getCurrentBiddingPrice() + 'VND';
+               this.transform( this.productInChatService.getCurrentBiddingPrice())
             }
           }
         }

@@ -18,15 +18,19 @@ export class ChatRoomEditComponent implements OnInit {
   areSubmit: any;
   ChatRoomId: any;
   userId: any;
+  CustomDuration: any;
   productIdEdit: any;
   CreateChatRoomForm!: FormGroup;
   checkedStates: boolean[] = [];
   uploadedImages: string[] = [];
   imgObject: any[] = [];
   isInputDisabled: boolean = true;
+  isCustomDuration: boolean = true;
+  isErrorDuration: boolean = false;
   startDate: any;
   productToAddRoom: any[] = [];
   constructor(
+    private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -37,7 +41,8 @@ export class ChatRoomEditComponent implements OnInit {
   ngOnInit(): void {
     this.ChatRoomId = this.route.snapshot.paramMap.get('ChatRoomId');
     this.CreateChatRoomForm = this.fb.group({
-      StartDate: ['', Validators.required]
+      StartDate: ['', Validators.required],
+      CustomDuration: ['', Validators.required]
     });
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
@@ -55,41 +60,46 @@ export class ChatRoomEditComponent implements OnInit {
     this.ProductWaitingList = [];
     this.productToAddRoom = [];
     this.checkedStates = [];
-    this.chatRoomService.getChatRoom(this.ChatRoomId).subscribe((data: any) => {
-
-      this.startDate = new Date(data.response.startDate);
-      const formattedStartDate = this.startDate.toISOString().slice(0, 16);
-      const offset = this.startDate.getTimezoneOffset() / 60; // Get the time zone offset in hours
-      this.startDate.setHours(this.startDate.getHours() + offset);
-      console.log(formattedStartDate);
-
-      this.CreateChatRoomForm.patchValue({
-        StartDate: formattedStartDate.toString()
-      });
-      this.setEndDate();
-    })
+    
     
     this.productService.getProductListFromChat(this.ChatRoomId).subscribe((data: any) => {
-      console.log(data)
 
       this.productToAddRoom = data.response;
+
       this.productToAddRoom.forEach(element => {
 
         element.images.forEach((image: any) => {
           this.loadImage(image.image, element.productId)
         });
       });
-      console.log("test", this.imgObject)
       this.productToAddRoom.forEach((element) => {
         this.checkedStates.push(true);
         this.ProductList.push(element)
       });
 
     })
+    this.chatRoomService.getChatRoom(this.ChatRoomId).subscribe((data: any) => {
 
+      console.log('startDate', data.response.startDate);
+      this.startDate = new Date(data.response.startDate);
+      var i = data.response.chatRoomProducts[0];
+      this.CustomDuration = data.response.customDuration;
+
+      var startDate = new Date(this.startDate.getTime());
+    
+      const offset = this.startDate.getTimezoneOffset() / 60; // Get the time zone offset in hours
+      this.startDate.setHours(this.startDate.getHours());
+      startDate.setHours(startDate.getHours() - offset);
+      const formattedStartDate = startDate.toISOString().slice(0, 16);
+      console.log('startdate after',this.startDate);
+
+      this.CreateChatRoomForm.patchValue({
+        StartDate: formattedStartDate.toString(),
+        CustomDuration: this.CustomDuration  
+      });
+      this.setEndDate();
+    })
     this.productService.getProductsWithStatus(1).subscribe((data: any) => {
-      console.log(data)
-
       this.ProductWaitingList = data.response;
       this.ProductWaitingList.forEach(element => {
 
@@ -104,20 +114,23 @@ export class ChatRoomEditComponent implements OnInit {
       });
     })
     
-    this.chatRoomService.getChatRoom(this.ChatRoomId).subscribe((data: any) => {
-      
-      this.startDate = new Date(data.response.startDate);
-      const startDate = new Date(this.startDate.getTime());
-      const offset = startDate.getTimezoneOffset() / 60; // Get the time zone offset in hours
-      startDate.setHours(startDate.getHours() - offset); // Adjust the hours by subtracting the offset
-      const formattedStartDate = startDate.toISOString().slice(0, 16);
-      console.log(formattedStartDate);
+  }
 
-      this.CreateChatRoomForm.patchValue({
-        StartDate: formattedStartDate.toString()
-      });
-      this.setEndDate();
-    })
+  onInput(event: Event) {
+    // This method will be called whenever there is any input in the input field
+    console.log('Input value:', (event.target as HTMLInputElement).value);
+    var dur = (event.target as HTMLInputElement).value;
+    this.CustomDuration = parseInt(dur, 10);
+    this.setEndDate();
+  }
+
+  getDuration(data: any){
+    var date1 = new Date(data.biddingEndTime)
+    var date2 = new Date(data.biddingStartTime)
+    console.log(date1, date2)
+    var num = date1.getTime() - date2.getTime();
+    var nums = Math.floor(num / (1000 * 60));
+    return nums
   }
   onCancel(): void {
     this.ResetForm();
@@ -196,22 +209,24 @@ export class ChatRoomEditComponent implements OnInit {
   setEndDate() {
     if(this.startDate){
       let startDate = new Date(this.startDate.getTime());
-      console.log(startDate.valueOf())
+      
       const endDateInput: HTMLInputElement | null = document.getElementById('endDate') as HTMLInputElement;
       if(isNaN(startDate.valueOf())){
         endDateInput.value = '';
       }
       else{
-        startDate.setMinutes(startDate.getMinutes() + 5 + 35 * this.productToAddRoom.length);
-  
+        console.log('duration',this.CustomDuration)
+        console.log('start',startDate)
+        startDate.setMinutes(startDate.getMinutes() + 5 + (this.CustomDuration + 5) * this.productToAddRoom.length);
+        console.log('end',startDate)
         // Get the time zone offset in minutes
         const offsetMinutes = startDate.getTimezoneOffset();
     
         // Adjust for the time zone offset
         startDate.setMinutes(startDate.getMinutes() - offsetMinutes);
-    
+        console.log('after convert',startDate)
         const formattedEndDate = startDate.toISOString().slice(0, 16);
-        
+        console.log('after format',formattedEndDate)
         if (endDateInput) {
           endDateInput.value = formattedEndDate;
         }
@@ -221,31 +236,46 @@ export class ChatRoomEditComponent implements OnInit {
     
   }
 
+  setEnableCustom() {
+    this.isCustomDuration = !this.isCustomDuration;
+    this.cdr.detectChanges();
+  }
+
   onSubmit(): void {
-    const payload = {
-      startDate: this.startDate
-    };
-    console.log(payload.startDate);
-    this.chatRoomService.editChatRoom(payload, this.ChatRoomId).subscribe({
-      next: (response: any) => {
-        const chatRoomId = response.response.chatRoomId;
-        const products: any[] = [];
-        this.productToAddRoom.forEach(element => {
-          products.push(element.productId);
-        });
-        const data = {
-          ChatRoomId: chatRoomId,
-          ProductIds: products
-        };
-        console.log(response)
-        console.log(chatRoomId)
-        this.chatRoomService.registerProductToChatRoom(data).subscribe({
-          complete:() => {
-              var answer = window.alert("Success"); this.onCancel(); window.location.reload() 
-          }
-        })
-      }
-    });
+    if(this.CreateChatRoomForm.value?.CustomDuration < 10){
+      this.isErrorDuration = true;
+    }
+    else{
+      this.isErrorDuration = false;
+      const payload = {
+        startDate: this.startDate,
+        duration: this.CreateChatRoomForm.value?.CustomDuration
+      };
+      console.log(payload);
+      this.chatRoomService.editChatRoom(payload, this.ChatRoomId).subscribe({
+        next: (response: any) => {
+          const chatRoomId = response.response.chatRoomId;
+          const products: any[] = [];
+          this.productToAddRoom.forEach(element => {
+            products.push(element.productId);
+          });
+          const data = {
+            ChatRoomId: chatRoomId,
+            ProductIds: products,
+            Duration: payload.duration
+          };
+          this.chatRoomService.registerProductToChatRoom(data).subscribe({
+            complete:() => {
+                var answer = window.alert("Success"); this.onCancel(); window.location.reload() 
+            }
+          })
+        },
+        error:() => {
+            
+        },
+      });
+
+    }
   }
 
 

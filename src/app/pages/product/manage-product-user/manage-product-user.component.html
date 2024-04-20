@@ -144,6 +144,7 @@
             <th scope="col">Initial Price</th>
             <th scope="col">Minimum Step</th>
             <th scope="col">Final Amount</th>
+            <th scope="col">Tax</th>
           </tr>
         </thead>
 
@@ -167,6 +168,11 @@
                 transform(product.biddings[product.biddings.length - 1]?.biddingAmount)
               }}
             </th>
+            <th scope="row">
+              {{
+                transform(getBiddingFares(product.biddings[product.biddings.length - 1]?.biddingAmount))
+              }}
+            </th>
           </tr>
         </tbody>
       </table>
@@ -187,15 +193,6 @@
           <tr>
             <th scope="row">
               <div>
-                <!-- <img
-                  [src]="
-                    product.images[0]
-                      ? 'productImages/' + product.images[0].image
-                      : 'https://via.placeholder.com/150'
-                  "
-                  class="card-img-top"
-                  alt="Product Image"
-                /> -->
                 <img
                   [src]="getImage(product.productId)[0]"
                   class="card-img-top"
@@ -217,7 +214,7 @@
                 </button>
               </div>
             </th>
-            <th
+            <!-- <th
               *ngIf="
                 product.productInStatuses[product.productInStatuses.length - 1]
                   .productStatusId != 1
@@ -227,7 +224,7 @@
                 product.productInStatuses[product.productInStatuses.length - 1]
                   .sta
               }}
-            </th>
+            </th> -->
           </tr>
         </tbody>
       </table>

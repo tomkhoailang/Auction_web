@@ -54,6 +54,24 @@
                     <input type="datetime-local" class="form-control" id="endDate"
                         required disabled>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Duration Each Product (Minutes)</label><br>
+                    <div>
+                        <input
+                        type="number"
+                        class="form-control"
+                        formControlName="CustomDuration"
+                        id="CustomDuration"
+                        placeholder="Enter duration"
+                        [required]="isCustomDuration"
+                        [attr.min]="isCustomDuration ? 10 : null"
+                        [value]="isCustomDuration ? 10 : null"
+                      /> 
+                    </div>
+                    <div *ngIf="isErrorDuration" class="text-danger">
+                        Minimum duration is 10 minutes.
+                    </div>
+                </div>
                 <div>
                     <table class="table table-hover table-bordered" style="width: 100%;">
                         <tbody *ngFor="let product of this.productToAddRoom; let i = index">                            

@@ -50,8 +50,8 @@ export class ProductService {
     let url = `http://localhost:5274/api/product/user`;
     return this.http.get(url);
   }
-  getStatusList() {
-    let url = `http://localhost:5274/api/Product/statuses`;
+  getBiddingFares() {
+    let url = `http://localhost:5274/api/Product/biddingfares`;
     return this.http.get(url);
   }
   deleteProduct(productId: number) {

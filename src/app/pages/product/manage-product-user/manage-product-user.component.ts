@@ -24,7 +24,7 @@ export class ManageProductUserComponent implements OnInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   ProductList: any[] = [];
-  StatusList: any[] = [];
+  FaresList: any[] = [];
   ChosenList: any[] = [];
   areSubmit: any;
   userId: any;
@@ -121,15 +121,17 @@ export class ManageProductUserComponent implements OnInit {
             }
           });
 
+          this.productService.getBiddingFares().subscribe((data: any) => {
+            console.log('result fares: ', data.response)
+            if(data.response != null){
+              this.FaresList = data.response;
+            }
+          });
           this.pageSlice = this.listWaiting.slice(0, 10);
           this.ChosenList = this.listWaiting;
         } else {
           window.alert('Null data');
         }
-      });
-
-      this.productService.getStatusList().subscribe((data1: any) => {
-        this.StatusList = data1.response;
       });
 
       setInterval(() => {
@@ -243,9 +245,22 @@ export class ManageProductUserComponent implements OnInit {
     this.selectedRowIndex = -1;
   }
 
+  getBiddingFares(value: number): number {
+    let cost = 0;
+    for(let i = this.FaresList.length-1; i >-1; i--){
+      if(value >= this.FaresList.at(i).biddingRange){
+        cost = this.FaresList[i].biddingCost;
+        break;
+      }
+    }
+    console.log(cost);
+
+    return value * cost / 100;
+  }
   transform(value: number): string {
     // Assuming the value is in VND
     const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    console.log('format values', formattedValue)
     return formattedValue;
   }
   getCurrentDateTime(): string {

@@ -35,6 +35,8 @@ export class CreateChatRoomComponent implements OnInit {
   checkedStates: boolean[] = [];
   uploadedImages: string[] = [];
   isInputDisabled: boolean = true;
+  isCustomDuration: boolean = false;
+  isErrorDuration: boolean = false;
   startDate: any;
   productToAddRoom: any[] = [];
   constructor(
@@ -47,7 +49,8 @@ export class CreateChatRoomComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.CreateChatRoomForm = this.fb.group({
-      StartDate: ['', Validators.required]
+      StartDate: ['', Validators.required],
+      CustomDuration: ['', Validators.required]
     });
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
@@ -68,12 +71,6 @@ export class CreateChatRoomComponent implements OnInit {
         this.ProductList.forEach(() => {
           this.checkedStates.push(false);
         });
-      })
-
-      this.productService.getStatusList().subscribe((data1: any) => {
-        console.log(data1)
-
-        this.StatusList = data1.response;
       })
     }
 
@@ -157,6 +154,11 @@ export class CreateChatRoomComponent implements OnInit {
     }
   }
 
+  setEnableCustom() {
+    this.isCustomDuration = !this.isCustomDuration;
+    this.cdr.detectChanges();
+  }
+
   handleInput(event: any) {
     this.enableSubmit = false;
     const inputValue: string = event.target.value;
@@ -174,7 +176,7 @@ export class CreateChatRoomComponent implements OnInit {
         endDateInput.value = '';
       }
       else{
-        startDate.setMinutes(startDate.getMinutes() + 5 + 35 * this.productToAddRoom.length);
+        startDate.setMinutes(startDate.getMinutes() + 5 + ((this.isCustomDuration ? this.CreateChatRoomForm.value?.CustomDuration : 30) + 5) * this.productToAddRoom.length);
   
         // Get the time zone offset in minutes
         const offsetMinutes = startDate.getTimezoneOffset();
@@ -193,31 +195,44 @@ export class CreateChatRoomComponent implements OnInit {
     
   }
 
+  get customDurationControl() {
+    return this.CreateChatRoomForm.controls['CustomDuration'];
+  }
+
   onSubmit(): void {
-    const payload = {
-      startDate: this.startDate
-    };
-    console.log(payload.startDate);
-    this.chatRoomService.createChatRoom(payload).subscribe({
-      next: (response: any) => {
-        const chatRoomId = response.response.chatRoomId;
-        const products: any[] = [];
-        this.productToAddRoom.forEach(element => {
-          products.push(element.productId);
-        });
-        const data = {
-          ChatRoomId: chatRoomId,
-          ProductIds: products
-        };
-        console.log(response)
-        console.log(chatRoomId)
-        this.chatRoomService.registerProductToChatRoom(data).subscribe({
-          complete:() => {
-              var answer = window.alert("Success"); this.onCancel(); window.location.reload() 
-          }
-        })
-      }
-    });
+    if(this.CreateChatRoomForm.value?.CustomDuration < 10){
+      this.isErrorDuration = true;
+    }
+    else{
+      this.isErrorDuration = false;
+      const payload = {
+        startDate: this.startDate,
+        duration: this.CreateChatRoomForm.value?.CustomDuration
+      };
+      console.log(payload);
+      this.chatRoomService.createChatRoom(payload).subscribe({
+        next: (response: any) => {
+          const chatRoomId = response.response.chatRoomId;
+          const products: any[] = [];
+          this.productToAddRoom.forEach(element => {
+            products.push(element.productId);
+          });
+          const data = {
+            ChatRoomId: chatRoomId,
+            ProductIds: products,
+            Duration: payload.duration
+          };
+          console.log(response)
+          console.log(chatRoomId)
+          this.chatRoomService.registerProductToChatRoom(data).subscribe({
+            complete:() => {
+                var answer = window.alert("Success"); this.onCancel(); window.location.reload() 
+            }
+          })
+        }
+      });
+    }
+    
   }
 
 

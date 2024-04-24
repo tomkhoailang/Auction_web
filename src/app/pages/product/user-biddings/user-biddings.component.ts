@@ -127,11 +127,15 @@ export class UserBiddingsComponent {
   }
 
   ResultBidding(product: any) {
+    let time = new Date(product.chatRoomProducts[product.chatRoomProducts.length - 1].biddingEndTime)
+    if(time > this.currentTime){
+      return 'BIDDING'
+    }
     if(product.biddings[product.biddings.length - 1].biddingUserId == this.userId){
-      return true;
+      return 'WIN';
     }    
     else{
-      return false;
+      return 'LOSE';
     }   
   }
 

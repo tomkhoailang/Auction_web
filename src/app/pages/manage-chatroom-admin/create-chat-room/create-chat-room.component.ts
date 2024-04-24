@@ -176,7 +176,7 @@ export class CreateChatRoomComponent implements OnInit {
         endDateInput.value = '';
       }
       else{
-        startDate.setMinutes(startDate.getMinutes() + 5 + ((this.isCustomDuration ? this.CreateChatRoomForm.value?.CustomDuration : 30) + 5) * this.productToAddRoom.length);
+        startDate.setMinutes(startDate.getMinutes() + 5 + ((this.CreateChatRoomForm.value ? this.CreateChatRoomForm.value?.CustomDuration : 0) + 5) * this.productToAddRoom.length);
   
         // Get the time zone offset in minutes
         const offsetMinutes = startDate.getTimezoneOffset();

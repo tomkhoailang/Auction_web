@@ -147,13 +147,17 @@
                                         <div class="candidate-list-content mt-3 mt-lg-0 margin-inline-end: 100px;">
                                             <div class="position-absolute top-50 end-0 translate-middle-y"
                                                 style="margin-inline-end: 50px">
-                                                <button class="btn" style="margin-inline-end: 10px; color: gold;"
-                                                    *ngIf="ResultBidding(product)">
-                                                    <b>WIN</b>
+                                                <button class="btn" style="margin-inline-end: 10px; color: yellow;"
+                                                *ngIf="ResultBidding(product) == 'WIN'">
+                                                    <b>{{ResultBidding(product)}}</b>
+                                                </button>
+                                                <button class="btn" style="margin-inline-end: 10px; color: yellowgreen;"
+                                                *ngIf="ResultBidding(product) == 'BIDDING'">
+                                                    <b>{{ResultBidding(product)}}</b>
                                                 </button>
                                                 <button class="btn" style="margin-inline-end: 10px; color: gray;"
-                                                    *ngIf="ResultBidding(product) == false">
-                                                    <b>LOSE</b>
+                                                *ngIf="ResultBidding(product) == 'LOSE'">
+                                                    <b>{{ResultBidding(product)}}</b>
                                                 </button>
                                                 <button class="btn btn-success" style="margin-inline-end: 10px"
                                                     (click)="setSelectedProduct(product)" data-bs-toggle="modal"

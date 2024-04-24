@@ -71,11 +71,20 @@ export class LoginComponent implements OnInit {
         },
         error: (e) => {
           console.log(e);
-          this.toast.error({
-            detail: 'Failed',
-            summary: 'Something went wrong',
-            duration: 5000,
-          });
+          debugger;
+          if (e.message !== null) {
+            this.toast.error({
+              detail: 'Failed',
+              summary: e.message,
+              duration: 5000,
+            });
+          } else {
+            this.toast.error({
+              detail: 'Failed',
+              summary: 'Something went wrong',
+              duration: 5000,
+            });
+          }
           this.spinner.hide();
         },
         complete: () => {
@@ -115,16 +124,16 @@ export class LoginComponent implements OnInit {
           }
         },
         error: (e) => {
-          if (e.message === 'Incorrect password') {
+          if (e.message !== null) {
             this.toast.error({
               detail: 'Failed',
-              summary: 'Incorrect password',
+              summary: e.message,
               duration: 5000,
             });
           } else {
             this.toast.error({
               detail: 'Failed',
-              summary: 'No user with that email',
+              summary: 'Something went wrong',
               duration: 5000,
             });
           }

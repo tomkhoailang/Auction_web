@@ -37,7 +37,6 @@ export class ProductInChatService {
     const maxBiddingAmount = bids.reduce((max: any, bid: any) => {
       return bid.biddingAmount > max ? bid.biddingAmount : max;
     }, this.currentBiddingProduct.initialPrice);
-    console.log('test 5', this.currentBiddingProduct);
     return maxBiddingAmount;
   }
   getMinBiddingPrice() {

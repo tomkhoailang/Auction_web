@@ -39,7 +39,9 @@ export class ChatService {
       'BiddingAmount:',
       (user: string, newBiddingAmount: number, messageTime: string) => {
         this.biddingAmount$.next(newBiddingAmount);
-        let biddingMessage = `${user} has bidded ${newBiddingAmount}`;
+        let biddingMessage = `${user} has bidded ${this.transform(
+          newBiddingAmount
+        )}`;
 
         this.biddingMessages = [
           ...this.biddingMessages,
@@ -56,7 +58,17 @@ export class ChatService {
       }
     );
   }
-
+  transform(value: number): string {
+    if (value) {
+      const formattedValue = value.toLocaleString('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      });
+      return formattedValue;
+    }
+    // Assuming the value is in VND
+    return '';
+  }
   public async start() {
     try {
       await this.connection.start();

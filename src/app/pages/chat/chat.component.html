@@ -1,8 +1,6 @@
 <div class="container-fluid mt-5">
   <div class="chat_header">
-    <h3 class="text-center my-2">
-      Chào mừng bạn đến với phòng đấu giá siêu cấp
-    </h3>
+    <h3 class="text-center my-2">Chào mừng bạn đến với phòng đấu giá</h3>
     <h3 class="mb-2">
       <div>
         <div #testElement>Current bidding time: 00h.00m.00s</div>
@@ -24,27 +22,56 @@
         <div class="headind_srch">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
-                role="tab" aria-controls="home" aria-selected="true">
+              <button
+                class="nav-link active"
+                id="home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#home"
+                type="button"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true"
+              >
                 Connected Users
               </button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-                role="tab" aria-controls="profile" aria-selected="false">
+              <button
+                class="nav-link"
+                id="profile-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#profile"
+                type="button"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false"
+              >
                 Products
               </button>
             </li>
           </ul>
         </div>
         <div class="tab-content">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div id="connectedUsers" class="inbox_chat tab-pane fade show active">
-              <ng-container *ngFor="let user of getChatService().connectedUsers$ | async">
+          <div
+            class="tab-pane fade show active"
+            id="home"
+            role="tabpanel"
+            aria-labelledby="home-tab"
+          >
+            <div
+              id="connectedUsers"
+              class="inbox_chat tab-pane fade show active"
+            >
+              <ng-container
+                *ngFor="let user of getChatService().connectedUsers$ | async"
+              >
                 <div class="chat_list">
                   <div class="chat_people">
                     <div class="chat_img">
-                      <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" />
+                      <img
+                        src="https://ptetutorials.com/images/user-profile.png"
+                        alt="sunil"
+                      />
                     </div>
                     <div class="chat_ib mt-3">
                       <h5>{{ user }} <span class="online"></span></h5>
@@ -54,53 +81,83 @@
               </ng-container>
             </div>
           </div>
-          <div class="inbox_chat tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <div
+            class="inbox_chat tab-pane fade"
+            id="profile"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+          >
             <div class="product_list">
               <div class="container" style="margin-top: 20px">
                 <div class="row">
-                  <div *ngFor="
+                  <div
+                    *ngFor="
                       let product of this.getProductInChatService().productList
-                    " class="col-md-6">
-                    <div class="card product-card mb-3" [class.bidding-product]="
+                    "
+                    class="col-md-6"
+                  >
+                    <div
+                      class="card product-card mb-3"
+                      [class.bidding-product]="
                         this.getProductInChatService().currentBiddingProduct !==
                           undefined &&
                         product.productId ===
                           this.getProductInChatService().currentBiddingProduct
                             .productId
-                      ">
-                      <img [src]="getImage(product.productId)[0]" class="card-img-top" alt="Product Image" />
+                      "
+                    >
+                      <img
+                        [src]="getImage(product.productId)[0]"
+                        class="card-img-top"
+                        alt="Product Image"
+                      />
                       <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">
                           {{ product.description }}
                         </p>
                         <p class="card-text">
-                          Initial Price: {{ transform(product.initialPrice) }} VNĐ
+                          Initial Price:
+                          {{ transform(product.initialPrice) }}
                         </p>
                         <p class="card-text">
-                          Minimum Step: {{ transform(product.minimumStep) }} VNĐ
+                          Minimum Step: {{ transform(product.minimumStep) }}
                         </p>
-                        <div *ngIf="
+                        <div
+                          *ngIf="
                             this.getProductInChatService()
                               .currentBiddingProduct !== undefined &&
                             product.productId ===
                               this.getProductInChatService()
                                 .currentBiddingProduct.productId
-                          ">
+                          "
+                        >
                           <div [formGroup]="sendBiddingForm">
-                            <input type="number" class="form-control" formControlName="biddingValue"
+                            <input
+                              type="number"
+                              class="form-control"
+                              formControlName="biddingValue"
                               placeholder="Enter your bidding"
-                              onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
+                              onkeydown="return event.keyCode !== 69 && event.keyCode !== 189"
+                            />
 
-                            <button (click)="sendBidding()" [disabled]="!sendBiddingForm.valid"
-                              class="btn btn-info btn-lg btn-block mt-2" type="button">
+                            <button
+                              (click)="sendBidding()"
+                              [disabled]="!sendBiddingForm.valid"
+                              class="btn btn-info btn-lg btn-block mt-2"
+                              type="button"
+                            >
                               Send bidding
                             </button>
-
                           </div>
                         </div>
-                        <button (click)="setSelectedProduct(product)" class="btn btn-secondary btn-lg btn-block mt-2"
-                          type="button" data-bs-toggle="modal" data-bs-target="#exampleModalToggle">
+                        <button
+                          (click)="setSelectedProduct(product)"
+                          class="btn btn-secondary btn-lg btn-block mt-2"
+                          type="button"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModalToggle"
+                        >
                           Details
                         </button>
                       </div>
@@ -114,35 +171,54 @@
       </div>
       <div class="mesgs">
         <div #scrollMe class="msg_history">
-          <ng-container *ngFor="let message of getChatService().messages$ | async">
-            <div [ngClass]="{
+          <ng-container
+            *ngFor="let message of getChatService().messages$ | async"
+          >
+            <div
+              [ngClass]="{
                 incoming_msg: message.user != loggedInUserName,
                 outgoing_msg: message.user === loggedInUserName,
-              }">
-              <div *ngIf="message.user != loggedInUserName" class="incoming_msg_img">
+              }"
+            >
+              <div
+                *ngIf="message.user != loggedInUserName"
+                class="incoming_msg_img"
+              >
                 <img src="https://ptetutorials.com/images/user-profile.png" />
               </div>
-              <div *ngIf="message.user != loggedInUserName" class="received_msg">
+              <div
+                *ngIf="message.user != loggedInUserName"
+                class="received_msg"
+              >
                 <div class="received_withd_msg">
                   <p [class.bot]="message.user === 'Bot'">
                     {{ message.message }}
                   </p>
-                  <span [class.bot]="message.user === 'Bot'" class="time_date">{{ message.user }} |
-                    {{ message.messageTime | date : "medium" }}</span>
+                  <span [class.bot]="message.user === 'Bot'" class="time_date"
+                    >{{ message.user }} |
+                    {{ message.messageTime | date : "medium" }}</span
+                  >
                 </div>
               </div>
               <div *ngIf="message.user === loggedInUserName" class="sent_msg">
                 <p>{{ message.message }}</p>
-                <span class="time_date">{{ message.user }} |
-                  {{ message.messageTime | date : "medium" }}</span>
+                <span class="time_date"
+                  >{{ message.user }} |
+                  {{ message.messageTime | date : "medium" }}</span
+                >
               </div>
             </div>
           </ng-container>
         </div>
         <div class="type_msg">
           <div class="input_msg_write">
-            <input (keydown.enter)="sendMessage()" [(ngModel)]="inputMessage" type="text" class="write_msg"
-              placeholder="Type a message" />
+            <input
+              (keydown.enter)="sendMessage()"
+              [(ngModel)]="inputMessage"
+              type="text"
+              class="write_msg"
+              placeholder="Type a message"
+            />
             <button (click)="sendMessage()" class="msg_send_btn" type="button">
               <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
             </button>
@@ -152,65 +228,95 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-  tabindex="-1">
+<div
+  class="modal fade"
+  id="exampleModalToggle"
+  aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel"
+  tabindex="-1"
+>
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-6">
             <div class="images p-3">
               <div class="text-center p-4">
-                <img id="main-image" [src]="this.selectedImage"
-                  class="img-thumbnail object-fit-sm-contain border rounded" [style.max-height.px]="200" />
+                <img
+                  id="main-image"
+                  [src]="this.selectedImage"
+                  class="img-thumbnail object-fit-sm-contain border rounded"
+                  [style.max-height.px]="200"
+                />
               </div>
 
               <div class="image-container thumbnail text-center">
-                <div *ngFor="
-                  let image of this.getImage(this.selectedProduct?.productId);
-                  let i = index
-                ">
-                  <img (click)="changeImage(image)" [src]="image" width="70" height="70" alt="Product Image" />
+                <div
+                  *ngFor="
+                    let image of this.getImage(this.selectedProduct?.productId);
+                    let i = index
+                  "
+                >
+                  <img
+                    (click)="changeImage(image)"
+                    [src]="image"
+                    width="70"
+                    height="70"
+                    alt="Product Image"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <div class="col-md-6">
-            <div class="product p-4 border" style="vertical-align:middle">
+            <div class="product p-4 border" style="vertical-align: middle">
               <div class="mt-4 mb-3">
                 <h1 class="text-uppercase text-muted brand">
                   {{ selectedProduct?.name }}
                 </h1>
                 <div class="price d-flex flex-row align-items-center">
-                  <span>Price: {{ transform(selectedProduct?.initialPrice) }}</span>
+                  <span
+                    >Price: {{ transform(selectedProduct?.initialPrice) }}</span
+                  >
                 </div>
                 <div class="price d-flex flex-row align-items-center">
-                  <span>Min Step:
-                    {{ transform(selectedProduct?.minimumStep) }}</span>
+                  <span
+                    >Min Step:
+                    {{ transform(selectedProduct?.minimumStep) }}</span
+                  >
                 </div>
               </div>
-              <p class="about">Description:<br><em>{{ selectedProduct?.description }}</em></p>
+              <p class="about">
+                Description:<br /><em>{{ selectedProduct?.description }}</em>
+              </p>
               <ul class="list-inline mb-0 text-muted">
                 <li class="list-inline-item">
                   <i class="mdi mdi-map-marker"></i>Start Bidding:
                   {{
-                  formatDate(
-                  selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1]
-                  .biddingStartTime
-                  )
+                    formatDate(
+                      selectedProduct?.chatRoomProducts[
+                        selectedProduct.chatRoomProducts.length - 1
+                      ].biddingStartTime
+                    )
                   }}
                 </li>
 
                 <li class="list-inline-item">
                   <i class="mdi mdi-wallet"></i>End Bidding:
                   {{
-                  formatDate(
-                  selectedProduct?.chatRoomProducts[selectedProduct.chatRoomProducts.length - 1]
-                  .biddingEndTime
-                  )
+                    formatDate(
+                      selectedProduct?.chatRoomProducts[
+                        selectedProduct.chatRoomProducts.length - 1
+                      ].biddingEndTime
+                    )
                   }}
                 </li>
               </ul>

@@ -59,6 +59,14 @@ const routes: Routes = [
     component: ChatRoomComponent,
     canActivate: [PermissionsService],
   },
+  {
+    path: 'manage-chatroom-admin/chat-room-details/:encodedId',
+    component: ChatRoomDetailsComponent
+  },
+  {
+    path: 'manage-chatroom-admin/chat-room-edit/:encodedId',
+    component: ChatRoomEditComponent
+  },
   { path: 'welcome', component: WelcomeComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'login', component: LoginComponent },

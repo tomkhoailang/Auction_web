@@ -22,6 +22,7 @@ export class ChatRoomComponent implements OnInit {
     this.chatRoomService.getUserChatRooms().subscribe({
       next: (value: any) => {
         this.chatRoomInfo = value.response;
+        this.chatRoomInfo = this.chatRoomInfo.reverse();
         console.log(this.chatRoomInfo[0]);
       },
       error(err) {},

@@ -30,7 +30,10 @@ export class ChatRoomDetailsComponent {
     private http: HttpClient
   ){}
   ngOnInit(): void{
-    this.ChatRoomId = this.route.snapshot.paramMap.get('ChatRoomId');
+    const encodedId = this.route.snapshot.paramMap.get('encodedId');
+    if(encodedId){
+      this.ChatRoomId = atob(encodedId);
+    }
     if(this.ChatRoomId){
       if(typeof document != 'undefined'){
         this.currentTime = new Date();
@@ -98,6 +101,7 @@ export class ChatRoomDetailsComponent {
           complete: () => { var answer = window.alert("Success");   
   
           this.router.navigateByUrl('/manage-chatroom-admin/chatrooms');
+          // window.location.reload();
         }
         
       })
@@ -123,7 +127,8 @@ export class ChatRoomDetailsComponent {
   }
   
   EditThisChatRoom(ChatRoomId: number) {
-    this.router.navigateByUrl(`/manage-chatroom-admin/chat-room-edit/${ChatRoomId}`)
+    const encodedId = btoa(ChatRoomId.toString());
+    this.router.navigate([`/manage-chatroom-admin/chat-room-edit/`, encodedId])
   }
 
   isBidding(chatRoom: any){

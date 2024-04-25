@@ -21,13 +21,10 @@ export class ChatroomsComponent {
   ){}
 
   ngOnInit(): void {
-    console.log('aaa')
+    
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
-      console.log(this.userId)
       this.chatRoomService.getAllChatRooms().subscribe((data: any) => {
-        console.log(data)
-        console.log('bbbb')
         this.ChatRoomList = data.response;
       })
 
@@ -35,7 +32,8 @@ export class ChatroomsComponent {
   }
 
   toDetailsChatRoom(ChatRoomId: number): void {
-    this.router.navigateByUrl(`/manage-chatroom-admin/chat-room-details/${ChatRoomId}`)
+    const encodedId = btoa(ChatRoomId.toString())
+    this.router.navigate([`/manage-chatroom-admin/chat-room-details/`, encodedId])
   }
 
   toDetailsProduct(ProductId: number): void {

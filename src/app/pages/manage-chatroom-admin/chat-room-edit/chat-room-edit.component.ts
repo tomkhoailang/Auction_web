@@ -27,7 +27,9 @@ export class ChatRoomEditComponent implements OnInit {
   isInputDisabled: boolean = true;
   isCustomDuration: boolean = true;
   isErrorDuration: boolean = false;
+  isErrorStartDate: boolean = false;
   startDate: any;
+  currentTime: any;
   productToAddRoom: any[] = [];
   constructor(
     private cdr: ChangeDetectorRef,
@@ -39,13 +41,20 @@ export class ChatRoomEditComponent implements OnInit {
     private chatRoomService: ChatRoomService
   ) { }
   ngOnInit(): void {
-    this.ChatRoomId = this.route.snapshot.paramMap.get('ChatRoomId');
+    const encodedId = this.route.snapshot.paramMap.get('encodedId');
+    if(encodedId != null){
+      this.ChatRoomId = atob(encodedId.toString());
+    }
     this.CreateChatRoomForm = this.fb.group({
       StartDate: ['', Validators.required],
       CustomDuration: ['', Validators.required]
     });
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
+      this.currentTime = new Date();
+      setInterval(() => {
+        this.currentTime = new Date();
+      }, 1000)
       console.log(this.userId)
       this.areSubmit = true;
 
@@ -123,7 +132,11 @@ export class ChatRoomEditComponent implements OnInit {
     this.CustomDuration = parseInt(dur, 10);
     this.setEndDate();
   }
-
+  transform(value: number): string {
+    // Assuming the value is in VND
+    const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return formattedValue;
+  }
   getDuration(data: any){
     var date1 = new Date(data.biddingEndTime)
     var date2 = new Date(data.biddingStartTime)
@@ -242,11 +255,20 @@ export class ChatRoomEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.CreateChatRoomForm.value?.CustomDuration < 10){
-      this.isErrorDuration = true;
+    console.log(this.currentTime.getDate);
+    if(this.CreateChatRoomForm.value?.CustomDuration < 10 || this.startDate < this.currentTime){
+      if(this.CreateChatRoomForm.value?.CustomDuration < 10){
+        this.isErrorDuration = true;
+        console.log('isErrorDuration = true')
+      }
+      if(this.startDate < this.currentTime){
+        this.isErrorStartDate = true;
+        console.log('isErrorStartDate = true')
+      }
     }
     else{
       this.isErrorDuration = false;
+      this.isErrorStartDate = false;
       const payload = {
         startDate: this.startDate,
         duration: this.CreateChatRoomForm.value?.CustomDuration
@@ -264,18 +286,17 @@ export class ChatRoomEditComponent implements OnInit {
             ProductIds: products,
             Duration: payload.duration
           };
+          console.log(response)
+          console.log(chatRoomId)
           this.chatRoomService.registerProductToChatRoom(data).subscribe({
             complete:() => {
                 var answer = window.alert("Success"); this.onCancel(); window.location.reload() 
             }
           })
-        },
-        error:() => {
-            
-        },
+        }
       });
-
     }
+    
   }
 
 

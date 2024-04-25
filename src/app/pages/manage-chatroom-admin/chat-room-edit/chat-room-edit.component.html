@@ -27,8 +27,8 @@
                         </th>
                         <th scope="row">{{product.name}}</th>
                         <th scope="row">{{product.description}}</th>
-                        <th scope="row">{{product.initialPrice}}</th>
-                        <th scope="row">{{product.minimumStep}}</th>
+                        <th scope="row">{{transform(product.initialPrice)}}</th>
+                        <th scope="row">{{transform(product.minimumStep)}}</th>
                         <th>
                             <div>
                                 <input type="checkbox" id="sel{{i}}" [checked]="checkedStates[i]"  [value]="product.productId"
@@ -49,7 +49,9 @@
                     <input type="datetime-local" class="form-control" id="StartDate" formControlName="StartDate"
                     (input)="handleInput($event)" [attr.min]="getCurrentDateTime()" required>
                 </div>
-
+                <div *ngIf="isErrorStartDate" class="text-danger">
+                    The start date must higher than current time.
+                </div>
                 <div class="mb-3">
                     <label for="endDate" class="form-label">End Date</label>
                     <input type="datetime-local" class="form-control" id="endDate"

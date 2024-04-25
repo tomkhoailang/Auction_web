@@ -37,7 +37,9 @@ export class CreateChatRoomComponent implements OnInit {
   isInputDisabled: boolean = true;
   isCustomDuration: boolean = false;
   isErrorDuration: boolean = false;
+  isErrorStartDate: boolean = false;
   startDate: any;
+  currentTime: any;
   productToAddRoom: any[] = [];
   constructor(
     private cdr: ChangeDetectorRef,
@@ -54,7 +56,10 @@ export class CreateChatRoomComponent implements OnInit {
     });
     if (typeof document !== 'undefined') {
       this.userId = sessionStorage?.getItem('id');
-
+      this.currentTime = new Date();
+      setInterval(() => {
+        this.currentTime = new Date();
+      }, 1000)
       this.enableSubmit = true;
       console.log(this.enableSubmit)
       this.productService.getProductsWithStatus(1).subscribe((data: any) => {
@@ -105,7 +110,19 @@ export class CreateChatRoomComponent implements OnInit {
     const product = this.imgObject.find(element => element.productId === productId);
     return product ? product.images : [];
   }
-
+  transform(value: number): string {
+    // Assuming the value is in VND
+    const formattedValue = value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    console.log('format values', formattedValue)
+    return formattedValue;
+  }
+  onInput(event: Event) {
+    // This method will be called whenever there is any input in the input field
+    // console.log('Input value:', (event.target as HTMLInputElement).value);
+    // var dur = (event.target as HTMLInputElement).value;
+    // this.CustomDuration = parseInt(dur, 10);
+    this.setEndDate();
+  }
   onCancel(): void {
     this.CreateChatRoomForm = this.fb.group({
       StartDate: ['', [Validators.required, futureDateValidator()]]
@@ -200,11 +217,20 @@ export class CreateChatRoomComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.CreateChatRoomForm.value?.CustomDuration < 10){
-      this.isErrorDuration = true;
+    console.log(this.currentTime.getDate);
+    if(this.CreateChatRoomForm.value?.CustomDuration < 10 || this.startDate < this.currentTime){
+      if(this.CreateChatRoomForm.value?.CustomDuration < 10){
+        this.isErrorDuration = true;
+        console.log('isErrorDuration = true')
+      }
+      if(this.startDate < this.currentTime){
+        this.isErrorStartDate = true;
+        console.log('isErrorStartDate = true')
+      }
     }
     else{
       this.isErrorDuration = false;
+      this.isErrorStartDate = false;
       const payload = {
         startDate: this.startDate,
         duration: this.CreateChatRoomForm.value?.CustomDuration
